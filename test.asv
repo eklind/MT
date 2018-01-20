@@ -1,0 +1,4 @@
+
+
+A=rand(100)
+A=reshape(A,)

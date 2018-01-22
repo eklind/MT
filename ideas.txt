@@ -1,0 +1,1 @@
+Abnormal operations can possibly be detected by observing control signal and/or the overall efficency

@@ -26,18 +26,21 @@ trend.rpm_comp=(min(1000,1*t)+50*sin(2*pi*10*x))/comp_vs_motor;
 trend.tension=sin(2*pi*10*x);
 trend.vibration=sin(2*pi*12*x)+sin(2*pi*5*x)+sin(2*pi*50*x);
 
-%%Creating constant white noise, 4 values, 1000 points
-temp=mean.temp*ones(1,length(t))+acc.temp*randn(1,length(t))+trend.temp;
-rpm.motor=mean.rpm_motor*ones(1,length(t))+acc.rpm_motor*randn(1,length(t))+trend.rpm_motor;
-rpm.comp=mean.rpm_comp*ones(1,length(t))+acc.rpm_comp*randn(1,length(t))+trend.rpm_comp;
-tension=mean.tension*ones(1,length(t))+acc.tension*randn(1,length(t))+trend.tension;
-vibration=mean.vibration*ones(1,length(t))+acc.vibration*randn(1,length(t))+trend.vibration;
+%Change sheet to number of tests
+for sheet=1:20
+    %%Creating constant white noise, 4 values, 1000 points
+    temp=mean.temp*ones(1,length(t))+acc.temp*randn(1,length(t))+trend.temp;
+    rpm.motor=mean.rpm_motor*ones(1,length(t))+acc.rpm_motor*randn(1,length(t))+trend.rpm_motor;
+    rpm.comp=mean.rpm_comp*ones(1,length(t))+acc.rpm_comp*randn(1,length(t))+trend.rpm_comp;
+    tension=mean.tension*ones(1,length(t))+acc.tension*randn(1,length(t))+trend.tension;
+    vibration=mean.vibration*ones(1,length(t))+acc.vibration*randn(1,length(t))+trend.vibration;
 
-data=[t;temp;rpm.motor;rpm.comp;tension;vibration]';
-save logg.mat data
-filename='dummy_data.xlsx';
-xlswrite(filename,data);
+    data=[t;temp;rpm.motor;rpm.comp;tension;vibration]';
+    save logg.mat data
+    filename='dummy_data.xlsx';
 
+    xlswrite(filename,data,sheet);
+end
 %plot temperature vs time
 subplot(2,3,1);
 plot(data(:,1),data(:,2));

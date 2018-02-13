@@ -1,3 +1,4 @@
 # Ignore data directory
 *.asv
-dummy_data.xlsx
+*.xlsx
+*.mat

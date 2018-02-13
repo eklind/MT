@@ -17,7 +17,7 @@ acc.vibration=5;
 
 %Sampled time
 t=0:0.1:3600; %6 minutes
-x=t/100;
+x=t/10000;
 
 %Data trends
 trend.temp=sin(2*pi*5*x) + 2*sin(2*pi*12*x);
@@ -34,6 +34,7 @@ tension=mean.tension*ones(1,length(t))+acc.tension*randn(1,length(t))+trend.tens
 vibration=mean.vibration*ones(1,length(t))+acc.vibration*randn(1,length(t))+trend.vibration;
 
 data=[t;temp;rpm.motor;rpm.comp;tension;vibration]';
+save logg.mat data
 filename='dummy_data.xlsx';
 xlswrite(filename,data);
 

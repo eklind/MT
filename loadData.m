@@ -5,12 +5,13 @@
 function loadedData=loadData(name,sheets)
     for i=sheets
         id=strcat('ID',num2str(i))
-        temp=xlsread(name,i);
-        loadedData.(id).data.param_1=temp(:,[1,2]);
-        loadedData.(id).data.param_2=temp(:,[1,3]);
-        loadedData.(id).data.param_3=temp(:,[1,4]);
-        loadedData.(id).data.param_4=temp(:,[1,5]);
-        loadedData.(id).data.param_5=temp(:,[1,6]);
+        values=xlsread(name,i);
+        loadedData.(id).data.temp_motor=values(:,[1,2]);
+        loadedData.(id).data.temp_comp=values(:,[1,3]);
+        loadedData.(id).data.rmp_motor=values(:,[1,4]);
+        loadedData.(id).data.rpm_comp=values(:,[1,5]);
+        loadedData.(id).data.tension=values(:,[1,6]);
+        loadedData.(id).data.vibrometer=values(:,[1,7]);
         loadedData.(id).op=i;
         i
     end

@@ -4,12 +4,12 @@ belt_tension.step_size=5;
 belt_tension.number=8;
 
 motor_rpm.start=0;
-motor_rpm.step_size=150;
-motor_rpm.number=10;
+motor_rpm.step_size=500;
+motor_rpm.number=4;
 
-load.start=0;
-load.step_size=0.5;
-load.number=4;
+comp_load.start=0;
+comp_load.step_size=0.5;
+comp_load.number=5;
 
 temp.start=-20;
 temp.step_size=20;
@@ -22,19 +22,19 @@ age.number=2;
 
 a=belt_tension.start:belt_tension.step_size:belt_tension.start+ belt_tension.step_size*belt_tension.number;
 b=motor_rpm.start:motor_rpm.step_size:motor_rpm.start+ motor_rpm.step_size*motor_rpm.number;
-c=load.start:load.step_size:load.start+ load.step_size*load.number;
+c=comp_load.start:comp_load.step_size:comp_load.start+ comp_load.step_size*comp_load.number;
 d=temp.start:temp.step_size:temp.start+ temp.step_size*temp.number;
 e=age.start:age.step_size:age.start+ age.step_size*age.number;
 
 %%
 %Create test table
-numOfTests=belt_tension.number*motor_rpm.number*load.number*temp.number*age.number;
+numOfTests=belt_tension.number*motor_rpm.number*comp_load.number*temp.number*age.number;
 test_table=zeros(numOfTests,5);
 
 test=1;
 for belt_var=1:belt_tension.number
     for motor_rpm_var=1:motor_rpm.number
-        for load_var=1:load.number
+        for load_var=1:comp_load.number
             for temp_var=1:temp.number
                 for age_var=1:age.number
                     test_table(test,1)=a(belt_var);
@@ -48,7 +48,7 @@ for belt_var=1:belt_tension.number
         end
     end
 end
-
+delete('test_table.xlsx')
 stop=strcat('A2:E',num2str(numOfTests+1))
 xlswrite('test_table.xlsx',{'belt tension','motor rpm','load fan','temperature','age'},'A1:E1');
 xlswrite('test_table.xlsx',test_table,stop);

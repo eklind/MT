@@ -30,7 +30,7 @@ trend.tension=sin(2*pi*10*x);
 trend.vibration=sin(2*pi*12*x)+sin(2*pi*5*x)+sin(2*pi*50*x);
 
 %Change sheet to number of tests
-for sheet=1:10
+for sheet=1:1
     %%Creating constant white noise, 4 values, 1000 points
     temp.motor=mean.temp_motor*ones(1,length(t))+acc.temp_motor*randn(1,length(t))+trend.temp_motor;
     temp.comp=mean.temp_comp*ones(1,length(t))+acc.temp_comp*randn(1,length(t))+trend.temp_comp;

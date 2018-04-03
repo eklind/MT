@@ -9,15 +9,36 @@ l=length(s);
 t=0:dt:(l*dt-dt);
 t=t';
 st=[t s];
+N=length(s);
 
+S=fft(s,N);
 
 order = 1;     % ridge order
 P = [1 1];   % Point on the ridge
 
 
 
-%%
 
+%%
+s_zero=s-mean(s);
+s_norm = normalize(s);
+
+% histogram(s_zero);
+histogram(s_norm,400,'normalization','pdf')
+
+% 3rd movement 
+s_skw = skewness(s_norm);
+
+% 4th moment
+s_norm2 = reshape(s_norm,511,[]);
+s_k = kurtosis(s_norm2,[],2);
+
+
+
+
+
+
+%%
 rpmtrack(s,f,order,P);
 
 plot(t,rpm)

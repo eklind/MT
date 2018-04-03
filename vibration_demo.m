@@ -4,17 +4,14 @@ range=1;
 vib_data=xlsread('vibration_data.xlsx','A:A');
 Fs=1000;
 L=14819;
-<<<<<<< HEAD
 t=0.001:0.001:L/1000;
 % vibr_data=double(table2array(vibrationdata));
 fft_vibr_data=fft(vibr_data)
-=======
 t=0.001:0.001:L*range/Fs;
 vibr_data=double(table2array(vibrationdata));
 vibr_data_smoothed=smoothdata(vibr_data);
 
 fft_vibr_data=fft(vibr_data_smoothed(1:end*range),L);
->>>>>>> f5af74e6a5e1c64e639e247e2b72963fecc99785
 f = Fs*(0:(L/2))/L;
 %f=Fs*(0:1)
 Lf=length(f);

@@ -1,4 +1,4 @@
-function [time_vector,sample_period] = lazy_sampler(data,fs)
+function [time_vector] = lazy_sampler(data,fs)
     % data is a 1D sampled data vector, fs is the used sample frequency.
     % Returns the time vector assoicated with the sample data, sample
     % time period

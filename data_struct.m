@@ -8,9 +8,6 @@ clc
 data = readtable('test_table.xlsx');
 [n,m]=size(data);
 
-
-
-
 % Create the data structure
 
 

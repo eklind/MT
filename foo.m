@@ -9,6 +9,8 @@ function return_val = foo(argA)
         argA+i
     end
     
+    % added this comment
+    
     %Added by Jonathan
     plot(argA)
     

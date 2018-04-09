@@ -23,7 +23,7 @@ amb_temp = input('Enter ambient temperature \n');
 
 OP1 = struct('ID',ID,'Nom_motor_RPM',nom_vel,'Nom_Tension_motor',nom_ten_motor,...
     'Nom_Tension_comp',nom_ten_comp,'Compressor_load',comp_load,...
-    'Ambient_Temp',amb_temp,'Compressor_Load',1,'Ambient_Temp',20);
+    'Ambient_Temp',amb_temp);
 
 %%
 % Fill the fields with appropiate sensor values

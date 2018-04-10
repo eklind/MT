@@ -13,7 +13,7 @@ pulley_comp=8*0.254;
 %hz
 sampling_freq=1000;
 
-belt
+belt 
 
 %calculate
 belt.nat_freq=frequency_estimator(data,sampling_freq)

@@ -1,8 +1,8 @@
-function [pks,freq] = fft_analyse(data,hz,show_freq,numPeaks)
+function [fft_data,f,pks,freq] = fft_analyse(data,hz,show_freq,numPeaks)
 
 L=length(data);
-data_filt=outlier_detection(data,0);
-data_filt=detrend(data_filt); %remove?
+%data_filt=outlier_detection(data,0);
+%data_filt=detrend(data_filt); %remove?
 %data_filt=smoothdata(data_filt);
 
 %frequency vector and abs fft data

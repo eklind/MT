@@ -3,22 +3,48 @@ clc
 % Load raw data
 
 % Read the sampled data, in the following order:
-%1=time, 2=rpm1, 3=rpm2, 4=temp1, 5=temp2, 6=laser, 7=pressure
-
-data = readtable('test_table.xlsx');
+%1=time, 2=rpm1, 3=rpm2, 4=temp1, 5=temp2, 6=laser, 7=pressure,
+% 8=AccX, 9=AccY, 10=AccZ
+file_name = 'test_table.xlsx';
+[data,txt,~] = xlsread(file_name);
+% data = readtable('test_table.xlsx','HeaderLines',2);
 [n,m]=size(data);
 
+% ID=input('Enter ID \n','s');
+params = {'Enter nominal motor speed','Enter nominal belt tension on motor side',...
+    'Enter nominal belt tension on compressoe side','Enter nominal compressor load',...
+    'Enter ambient temperature'};
+dim1=[1 50];
+
+run_param = inputdlg(params,'Enter Run Parameters',dim1);
+
+nom_vel = str2double(run_param{1});
+nom_ten_motor = str2double(run_param{2});
+nom_ten_comp = str2double(run_param{3});
+comp_load = str2double(run_param{4});
+amb_temp = str2double(run_param{5});
+
+
+
+
+
+sensor_list={'Time','Velocity 1','Velocity 2','Temperature 1','Temperature 2',...
+    'Laser','Acceleration X','Acceleration Y','Acceleration Z'};
+dim2=[1 30];
+definput={'1','1','1','1','1','1','0','0','0'};
+used_sensors = inputdlg(sensor_list,'Specify what has been measured',dim2,definput);
+n_sensors = size(used_sensors);
+used_sensors_num=[];
+for n=1:n_sensors(1)
+    used_sensors_num(n) = str2double(used_sensors{n});
+end
+
+indx = used_sensors_num.*(1:length(used_sensors_num));
+[~,indx ]= nnc((used_sensors_num*(-1)+1));
+updated_sensor_list = sensor_list{indx};
+
 % Create the data structure
-
-
-ID=input('Enter ID \n','s');
-nom_vel = input('Enter nominal motor speed \n');
-nom_ten_motor = input('Enter nominal belt tension on motor side \n');
-nom_ten_comp = input('Enter nominal belt tension on compressoe side \n');
-comp_load = input('Enter nominal compressor load \n');
-amb_temp = input('Enter ambient temperature \n');
-
-OP1 = struct('ID',ID,'Nom_motor_RPM',nom_vel,'Nom_Tension_motor',nom_ten_motor,...
+OP1 = struct('Nom_motor_RPM',nom_vel,'Nom_Tension_motor',nom_ten_motor,...
     'Nom_Tension_comp',nom_ten_comp,'Compressor_load',comp_load,...
     'Ambient_Temp',amb_temp);
 
@@ -31,7 +57,7 @@ OP1 = struct('ID',ID,'Nom_motor_RPM',nom_vel,'Nom_Tension_motor',nom_ten_motor,.
 % OP1.temp2 = 1.1*temp;
 % OP1.laser = laser_disp;
 
-for i={'t','v1','v2','temp1','temp2','laser'}
+for i={'t','v1','v2','temp1','temp2','laser','AccX','AccY','AccZ'}
     while j<=m
     OP1.(i{1}) = data(:,j);
     j=j+1;

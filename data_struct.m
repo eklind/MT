@@ -7,7 +7,6 @@ clc
 % 8=AccX, 9=AccY, 10=AccZ
 file_name = 'test_table.xlsx';
 [data,txt,~] = xlsread(file_name);
-% data = readtable('test_table.xlsx','HeaderLines',2);
 [n,m]=size(data);
 
 % ID=input('Enter ID \n','s');
@@ -24,10 +23,6 @@ nom_ten_comp = str2double(run_param{3});
 comp_load = str2double(run_param{4});
 amb_temp = str2double(run_param{5});
 
-
-
-
-
 sensor_list={'Time','Velocity 1','Velocity 2','Temperature 1','Temperature 2',...
     'Laser','Acceleration X','Acceleration Y','Acceleration Z'};
 dim2=[1 30];
@@ -39,10 +34,13 @@ for n=1:n_sensors(1)
     used_sensors_num(n) = str2double(used_sensors{n});
 end
 
+
+%===== Does not work right now, need a way to update sensor_list based on
+%the user input
 indx = used_sensors_num.*(1:length(used_sensors_num));
 [~,indx ]= nnc((used_sensors_num*(-1)+1));
 updated_sensor_list = sensor_list{indx};
-
+%======================================================================
 % Create the data structure
 OP1 = struct('Nom_motor_RPM',nom_vel,'Nom_Tension_motor',nom_ten_motor,...
     'Nom_Tension_comp',nom_ten_comp,'Compressor_load',comp_load,...

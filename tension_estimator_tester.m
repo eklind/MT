@@ -1,5 +1,5 @@
 %load data
-data=tension;
+data=bomps5;
 
 %Belt parameters
 belt.span=    446;      %[mm]
@@ -11,14 +11,14 @@ pulley_ten=8*0.254;
 pulley_comp=8*0.254;
 
 %hz
-sampling_freq=1000;
+sampling_freq=320;
 
-belt 
+
 
 %calculate
-belt.nat_freq=frequency_estimator(data,sampling_freq)
+[belt.nat_freq,belt.nat_freq_var]=frequency_estimator(data,sampling_freq)
 belt.tension=tension_estimator(belt.nat_freq,belt.span,belt.width,belt.mass,pulley_ten,pulley_comp)
-
+belt 
 %% estimate
 
 %Tl=tension_estimator(belt.loose_frequency,belt.span,belt.width,belt.mass,0.254*8,0.254*8)

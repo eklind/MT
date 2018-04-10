@@ -9,7 +9,7 @@ L=length(data);
 %frequency vector and abs fft data
 f = hz*(0:(L/2))/L;
 f=f';
-fft_data=abs(fft(data_filt,L))/L;
+fft_data=2*abs(fft(data_filt,L))/(L);
 fft_data_n=fft_data(1:length(f));
 
 if(show_freq==true)

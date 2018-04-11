@@ -23,14 +23,16 @@ if(show_freq==true)
     legend('Vibration data')
     hold off
     
-    subplot(2,1,2)
-    f2=f(1:downsample:end);
-    for(i=0:length(f2)-1)
-        fft_data2(i+1)=sum(fft_data(1+i*downsample:(i+1)*downsample));
+    if(nargin>3)
+        subplot(2,1,2)
+        f2=f(1:downsample:end);
+        for(i=0:length(f2)-1)
+            fft_data2(i+1)=sum(fft_data(1+i*downsample:(i+1)*downsample));
+        end
+        stem(f2,fft_data2(1:length(f2)))
+        ylabel('Magnitude')
+        xlabel('Frequency')
+        legend('Vibration data frequencies collected')
     end
-    stem(f2,fft_data2(1:length(f2)))
-    ylabel('Magnitude')
-    xlabel('Frequency')
-    legend('Vibration data frequencies collected')
 end
 end

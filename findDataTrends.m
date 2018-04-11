@@ -1,4 +1,5 @@
 function trendStruct=findDataTrends(sensor_series)
+%Finish funsion or remove
 
 time=sensor_series(1,:);
 values=sensor_series(2,:);

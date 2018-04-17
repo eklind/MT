@@ -11,7 +11,7 @@ else
 end
 
 %Reshape
-data=reshape(data,[length(data)/window_size window_size])'
+data=reshape(data,[length(data)/window_size window_size])';
 
 %Calculate
 metric_struct.mean=mean(data); %first moment of shunks

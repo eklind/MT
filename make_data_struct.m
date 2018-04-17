@@ -77,10 +77,10 @@ if(nargin>=1)
 else     
      tdms_data = TDMS_getStruct();
      lf_data_struct = struct2cell(tdms_data.g_1Hz_Data);
-     hf_data_struct = struct2cell(tdms_data.g_10kHz_Data);
+     hf_data_struct = struct2cell(tdms_data.g_1kHz_Data);
      
      low_freq=1/mean(diff(tdms_data.g_1Hz_Data.Time__sec_.data));
-     high_freq = 1/mean(diff(tdms_data.g_10kHz_Data.Time__sec_.data));
+     high_freq = 1/mean(diff(tdms_data.g_1kHz_Data.Time__sec_.data));
      
      LF = struct('Sampling_Rate_Hz',low_freq);
      HF = struct('Sampling_Rate_Hz',high_freq);
@@ -90,9 +90,9 @@ else
      end
      
      HF = setfield(HF,'Belt_Displacement',...
-         tdms_data.g_10kHz_Data.Belt_Displacement.data);
+         tdms_data.g_1kHz_Data.Belt_Displacement.data);
      HF = setfield(HF,'Time__sec_',...
-         tdms_data.g_10kHz_Data.Time__sec_.data);
+         tdms_data.g_1kHz_Data.Time__sec_.data);
     
 end
     

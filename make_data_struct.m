@@ -3,17 +3,6 @@ function data_structure = make_data_struct(filepath)
 % returns a data structure with all the measurements.
 
 
-    % file_name = 'data_struct_table.xlsx';
-    % filename = 'C:\Users\Viktor\Desktop\Shakedown1.xlsx';
-
-    %====== Load raw data from tab 3 and 4 in file 'filename' =========
-    [~,lf_sensors,~] = xlsread(filepath,4,'A1:Z1');
-    [~,hf_sensors,~] = xlsread(filepath,5,'A1:Z1');
-    n_lf_sensors=size(lf_sensors(1,:));
-    n_hf_sensors=size(hf_sensors(1,:));
-
-    [lf_data,~,~] = xlsread(filepath,4);
-    [hf_data,~,~] = xlsread(filepath,5);
 
     % ====== Ask user for experiment specific parameters ============
     params = {'Enter nominal motor speed','Enter nominal belt tension on motor side',...
@@ -37,13 +26,27 @@ function data_structure = make_data_struct(filepath)
         'Nom_Tension_comp',nom_ten_comp,'Motor_current',motor_current,...
         'Ambient_Temp',amb_temp,'Comments',comments);
 
+        % file_name = 'data_struct_table.xlsx';
+    % filename = 'C:\Users\Viktor\Desktop\Shakedown1.xlsx';
+    
+ % ====== If a filepath is passed as argument, it loads an .xlsx file   
+    
+if(nargin>=1)
+    %====== Load raw data from tab 3 and 4 in file 'filename' =========
+    [~,lf_sensors,~] = xlsread(filepath,4,'A1:Z1');
+    [~,hf_sensors,~] = xlsread(filepath,5,'A1:Z1');
+    n_lf_sensors=size(lf_sensors(1,:));
+    n_hf_sensors=size(hf_sensors(1,:)); 
 
+    [lf_data,~,~] = xlsread(filepath,4);
+    [hf_data,~,~] = xlsread(filepath,5);
+    
     % ========= Create two data structures, for high and low speed sampling.
     % Calculate sample frequencies
     low_freq = 1/mean(diff(lf_data(:,1)));
     high_freq = 1/mean(diff(hf_data(:,1)));
-    LF = struct('Sampling_Rate',low_freq);
-    HF = struct('Sampling_Rate',high_freq);
+    LF = struct('Sampling_Rate_Hz',low_freq);
+    HF = struct('Sampling_Rate_Hz',high_freq);
 
 
     % ========= Format input data to fit with a struct ================
@@ -69,7 +72,31 @@ function data_structure = make_data_struct(filepath)
     for j=1:n_hf_sensors(2)
         HF = setfield(HF,str_hf{j},hf_data(:,j));
     end
-
+   
+    % ===== If no input arguments, tdms-file has to be chosen  ======
+else     
+     tdms_data = TDMS_getStruct();
+     lf_data_struct = struct2cell(tdms_data.g_1Hz_Data);
+     hf_data_struct = struct2cell(tdms_data.g_10kHz_Data);
+     
+     low_freq=1/mean(diff(tdms_data.g_1Hz_Data.Time__sec_.data));
+     high_freq = 1/mean(diff(tdms_data.g_10kHz_Data.Time__sec_.data));
+     
+     LF = struct('Sampling_Rate_Hz',low_freq);
+     HF = struct('Sampling_Rate_Hz',high_freq);
+     for i=3:length(lf_data_struct(:,1))
+        name = lf_data_struct{i}.name;
+        LF = setfield(LF,name,lf_data_struct{i}.data);
+     end
+     
+     HF = setfield(HF,'Belt_Displacement',...
+         tdms_data.g_10kHz_Data.Belt_Displacement.data);
+     HF = setfield(HF,'Time__sec_',...
+         tdms_data.g_10kHz_Data.Time__sec_.data);
+    
+end
+    
+    
 % === Concatenate the three structs into one ==================== 
     OP1.LF=LF;
     OP1.HF=HF;

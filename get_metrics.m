@@ -1,7 +1,6 @@
 function [out,removed]=get_metrics(data,window_size)
 %takes data of dimension m x 1 and outputs a struct with key values
 %returns removed number of values
-%[size_1,size_2]=size(data);
 
 L=length(data);
 if(nargin>1)

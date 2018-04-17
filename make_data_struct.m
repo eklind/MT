@@ -103,4 +103,9 @@ end
 
 % ==== Return the data structure ============
 data_structure = OP1;
+name=name_save(data_structure);
+
+save("Experiments/"+name+".mat",name);
+
+
 end

@@ -1,4 +1,4 @@
-function position = experiment_space(nom_speed, tension1, tension2, comp_load)
+function position = experiment_space(nom_speed, tension1, tension2, motor_current)
     % Takes in the nominal motor speed used in the experiment, the measured
     % tension on motor side and compressor side and the compressor load.
     % Returns an operation point in the experimet space.
@@ -14,7 +14,7 @@ function position = experiment_space(nom_speed, tension1, tension2, comp_load)
 
     rpm_range=[0 2000]; %[RPM] x
     tension_range=[50 250]; %[lbs] y
-    load_range=[0 10];  %[-] z
+    load_range=[0 30];  %[Amps] z
 
 
     average_tension=(tension1+tension2)/2;
@@ -30,7 +30,7 @@ function position = experiment_space(nom_speed, tension1, tension2, comp_load)
     rel_tension = ceil(rel_tension *100);
     %load
     rel_load_range=load_range-load_range(1);
-    rel_load=(comp_load-load_range(1))/(rel_load_range(2)-rel_load_range(1));
+    rel_load=(motor_current-load_range(1))/(rel_load_range(2)-rel_load_range(1));
     rel_load = ceil(rel_load *100);
 
 

@@ -1,5 +1,4 @@
 # Ignore data directory
 *.asv
 *.xlsx
-*.mat
 viktor_sandbox.m

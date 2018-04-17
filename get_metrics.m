@@ -30,7 +30,7 @@ out.rms=rms(out.reshaped);
 %out.movmad=movmad(out.reshaped,10);
 
 %envelope
-[out.env_u,out.env_l]=envelope(out.reshaped);
+%[out.env_u,out.env_l]=envelope(out.reshaped);
 
 %approx entropy
 out.entropy=approximateEntropy(out.reshaped);

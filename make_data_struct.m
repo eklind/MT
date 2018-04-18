@@ -81,7 +81,7 @@ else
      
      lf_data_struct = struct2cell(tdms_data.g_1Hz_Data);
      hf_data_struct = struct2cell(tdms_data);
-     hf_data_struct = hf_data_struct{2};
+     hf_data_struct = hf_data_struct{3};
      
      low_freq=1/mean(diff(tdms_data.g_1Hz_Data.Time__sec_.data));
      high_freq = 1/mean(diff(hf_data_struct.Time__sec_.data));

@@ -15,7 +15,7 @@ function data_structure = make_data_struct(filepath)
     nom_vel = str2double(run_param{1});
     nom_ten_motor = str2double(run_param{2});
     nom_ten_comp = str2double(run_param{3});
-    motor_current = str2double(run_param{4});
+    motor_current = str2double(run_param{4})*10;
     amb_temp = str2double(run_param{5});
     comments = run_param{6};
 

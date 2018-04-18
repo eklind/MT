@@ -7,22 +7,24 @@ function data_structure = make_data_struct(filepath)
     % ====== Ask user for experiment specific parameters ============
     params = {'Enter nominal motor speed','Enter nominal belt tension on motor side',...
         'Enter nominal belt tension on compressoe side','Enter steady state motor current',...
-        'Enter ambient temperature','Other comments'};
+        'Enter ambient temperature','Other comments','Save name and data structure? y/n'};
 
     % Gui for parameter input
     dim1=[1 50];
-    run_param = inputdlg(params,'Enter Run Parameters',dim1);
+    deaf_param = {'1','1','1','1','1',' ','n'};
+    run_param = inputdlg(params,'Enter Run Parameters',dim1,deaf_param);
     nom_vel = str2double(run_param{1});
     nom_ten_motor = str2double(run_param{2});
     nom_ten_comp = str2double(run_param{3});
     motor_current = str2double(run_param{4})*10;
     amb_temp = str2double(run_param{5});
     comments = run_param{6};
+    save_opt = run_param{7};
 
 
 
     %=========== Create the top level data structure ==============
-    OP1 = struct('Nom_motor_RPM',nom_vel,'Nom_Tension_motor',nom_ten_motor,...
+    data_structure = struct('Nom_motor_RPM',nom_vel,'Nom_Tension_motor',nom_ten_motor,...
         'Nom_Tension_comp',nom_ten_comp,'Motor_current',motor_current,...
         'Ambient_Temp',amb_temp,'Comments',comments);
 
@@ -76,11 +78,13 @@ if(nargin>=1)
     % ===== If no input arguments, tdms-file has to be chosen  ======
 else     
      tdms_data = TDMS_getStruct();
+     
      lf_data_struct = struct2cell(tdms_data.g_1Hz_Data);
-     hf_data_struct = struct2cell(tdms_data.g_1kHz_Data);
+     hf_data_struct = struct2cell(tdms_data);
+     hf_data_struct = hf_data_struct{2};
      
      low_freq=1/mean(diff(tdms_data.g_1Hz_Data.Time__sec_.data));
-     high_freq = 1/mean(diff(tdms_data.g_1kHz_Data.Time__sec_.data));
+     high_freq = 1/mean(diff(hf_data_struct.Time__sec_.data));
      
      LF = struct('Sampling_Rate_Hz',low_freq);
      HF = struct('Sampling_Rate_Hz',high_freq);
@@ -90,22 +94,25 @@ else
      end
      
      HF = setfield(HF,'Belt_Displacement',...
-         tdms_data.g_1kHz_Data.Belt_Displacement.data);
+         hf_data_struct.Belt_Displacement.data);
      HF = setfield(HF,'Time__sec_',...
-         tdms_data.g_1kHz_Data.Time__sec_.data);
+         hf_data_struct.Time__sec_.data);
     
 end
     
     
 % === Concatenate the three structs into one ==================== 
-    OP1.LF=LF;
-    OP1.HF=HF;
+    data_structure.LF=LF;
+    data_structure.HF=HF;
 
-% ==== Return the data structure ============
-data_structure = OP1;
-name=name_save(data_structure);
+% ==== Return and save the data structure ============
 
-save("Experiments/"+name+".mat",name);
-
+if (save_opt == 'y')
+    name=name_save(data_structure);
+    save("Experiments/"+name+".mat",name);
+    disp("Data Structure Saved as "+name); 
+else
+    disp("Data Structure NOT saved!")
+end
 
 end

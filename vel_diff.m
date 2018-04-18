@@ -1,6 +1,6 @@
 function speed_info=vel_diff(rpm1,rpm2,ratio,filter)
 
-if(nargin<2)
+if(nargin<3)
     ratio=1;
 end
 if(nargin>3)

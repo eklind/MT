@@ -78,6 +78,8 @@ if(nargin>=1)
     % ===== If no input arguments, tdms-file has to be chosen  ======
 else     
      tdms_data = TDMS_getStruct();
+     %remove temperature offsets
+     tdms_data = calibrate_temps(tdms_data);
      
      lf_data_struct = struct2cell(tdms_data.g_1Hz_Data);
      hf_data_struct = struct2cell(tdms_data);

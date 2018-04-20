@@ -82,11 +82,12 @@ else
      tdms_data = calibrate_temps(tdms_data);
      
      lf_data_struct = struct2cell(tdms_data.g_1Hz_Data);
-     hf_data_struct = struct2cell(tdms_data);
-     hf_data_struct = hf_data_struct{3};
+     hf_data_struct = struct2cell(tdms_data);%s2
+     hf_data_struct = hf_data_struct{3}; 
+     hf_data_struct = struct2cell(hf_data_struct);
      
-     low_freq=1/mean(diff(tdms_data.g_1Hz_Data.Time__sec_.data));
-     high_freq = 1/mean(diff(hf_data_struct.Time__sec_.data));
+     low_freq = 1/mean(diff(tdms_data.g_1Hz_Data.Time__sec_.data));
+     high_freq = 1/mean(diff(hf_data_struct{3}.data));
      
      LF = struct('Sampling_Rate_Hz',low_freq);
      HF = struct('Sampling_Rate_Hz',high_freq);
@@ -95,10 +96,22 @@ else
         LF = setfield(LF,name,lf_data_struct{i}.data);
      end
      
-     HF = setfield(HF,'Belt_Displacement',...
-         hf_data_struct.Belt_Displacement.data);
-     HF = setfield(HF,'Time__sec_',...
-         hf_data_struct.Time__sec_.data);
+     for j=3:length(hf_data_struct(:,1))
+        name = hf_data_struct{j}.name;
+        HF = setfield(HF,name,hf_data_struct{j}.data);
+     end
+     
+%      HF = setfield(HF,'Time__sec_',...
+%          hf_data_struct.Time__sec_.data);
+%      HF = setfield(HF,'Belt_Displacement',...
+%          hf_data_struct.Belt_Displacement.data);
+%      HF = setfield(HF,'Accelerometer_X',...
+%          hf_data_struct.Accelerometer_X_Axis.data);
+%      HF = setfield(HF,'Accelerometer_Y',...
+%          hf_data_struct.Accelerometer_Y_Axis.data);
+%      HF = setfield(HF,'Accelerometer_Z',...
+%          hf_data_struct.Accelerometer_Z_Axis.data);
+     
     
 end
     

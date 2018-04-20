@@ -1,6 +1,10 @@
-function data= plot_test()
+function data= plot_test(data_struct)
 % %%plot test data
-data=TDMS_getStruct();
+if(nargin<1)
+    data=TDMS_getStruct();
+else
+   data=data_struct; 
+end
 %Plot
 figure(1)
 %tlt=strcat('tension motor: ',string(data.Nom_Tension_motor),', tension compressor:',string(data.Nom_Tension_comp));

@@ -41,13 +41,17 @@ P_0=eye(2);
     filtered_struct.LF.Compressor_Discharge_Pressure = P_Dis_filt;
     
     % ==== Filter Temperature signals ===========
-    T_Drive_belt = input_struct.LF.Compressor_Belt_Temp;
-    T_Pull = input_struct.LF.Pulley_Surface_Temp;
-    T_Pull = input_struct.LF.Pulley_Surface_Temp;
-    T_Pull = input_struct.LF.Pulley_Surface_Temp;
-    T_Pull = input_struct.LF.Pulley_Surface_Temp;
-    T_Pull = input_struct.LF.Pulley_Surface_Temp;
+    Compressor_Belt_Temp = input_struct.LF.Compressor_Belt_Temp;
+    Pulley_Surface_Temp = input_struct.LF.Pulley_Surface_Temp;
+    Drive_Belt_Surface_Temp = input_struct.LF.Drive_Belt_Surface_Temp;
     
+    Evap_Air_In = input_struct.LF.Evap_Air_In;
+    Evap_Air_Out = input_struct.LF.Evap_Air_Out;
+    Cond_Air_In = input_struct.LF.Cond_Air_In;
+    Cond_Air_Out = input_struct.LF.Cond_Air_Out;
+    Evaporator_Refrigerant_In=input_struct.LF.Evaporator_Refrigerant_In;
+    Evaporator_Refrigerant_Out=input_struct.LF.Evaporator_Refrigerant_Out;
+    Condenser_Refrigerant_In=input_struct.LF.Condenser_Refrigerant_In;
     % todo add temperature filters
     
     % ==== Filter Displacement signal ===========

@@ -7,7 +7,7 @@ filtered_struct = input_struct;
 
 %Moving mean
 k=10;
-MA = ones(k)*(1/k); %can be used as moving average
+MA = ones(1,k)*(1/k); %can be used as moving average
 
 %Kalman rpm parameters
 Td=1;
@@ -21,16 +21,18 @@ P_0=eye(2);
 %===============================================================    
 
     % ==== Filter RPM signals ===================
+    %Kalman filter
     rpm_motor = input_struct.LF.Drive_RPM;
     rpm_comp = input_struct.LF.Comp_RPM;
     
-    rpm_motor_filt = kalmanFilter(rpm_motor,rpm_motor(1),P_0,A,Q,H,R);
-    rpm_comp_filt = kalmanFilter(rpm_comp,rpm_comp(1),P_0,A,Q,H,R);
+    rpm_motor_filt = kalmanFilter(rpm_motor,[rpm_motor(1);0],P_0,A,Q,H,R);
+    rpm_comp_filt = kalmanFilter(rpm_comp,[rpm_comp(1);0],P_0,A,Q,H,R);
     
-    filtered_struct.LF.Drive_RPM = rpm_motor_filt;
-    filtered_struct.LF.Compressor_RPM = rpm_comp_filt;
+    filtered_struct.LF.Drive_RPM = rpm_motor_filt(1,:);
+    filtered_struct.LF.Compressor_RPM = rpm_comp_filt(1,:);
     
     % ==== Filter Pressure signals ==============
+    %moving average
     P_Suc = input_struct.LF.Compressor_Suction_Pressure;
     P_Dis = input_struct.LF.Compressor_Discharge_Pressure; 
     
@@ -41,23 +43,40 @@ P_0=eye(2);
     filtered_struct.LF.Compressor_Discharge_Pressure = P_Dis_filt;
     
     % ==== Filter Temperature signals ===========
+    %Moving average
+    
+    %belt system
     Compressor_Belt_Temp = input_struct.LF.Compressor_Belt_Temp;
     Pulley_Surface_Temp = input_struct.LF.Pulley_Surface_Temp;
     Drive_Belt_Surface_Temp = input_struct.LF.Drive_Belt_Surface_Temp;
+    filtered_struct.LF.Compressor_Belt_Temp_filt=conv(Compressor_Belt_Temp,MA);
+    filtered_struct.LF.Pulley_Surface_Temp_filt=conv(Pulley_Surface_Temp,MA);
+    filtered_struct.LF.Drive_Belt_Surface_Temp_filt=conv(Drive_Belt_Surface_Temp,MA);
     
+    %Air temps
     Evap_Air_In = input_struct.LF.Evap_Air_In;
     Evap_Air_Out = input_struct.LF.Evap_Air_Out;
     Cond_Air_In = input_struct.LF.Cond_Air_In;
     Cond_Air_Out = input_struct.LF.Cond_Air_Out;
+    filtered_struct.LF.Evap_Air_In=conv(Evap_Air_In,MA);
+    filtered_struct.LF.Evap_Air_Out=conv(Evap_Air_Out,MA);
+    filtered_struct.LF.Cond_Air_In=conv(Cond_Air_In,MA);
+    filtered_struct.LF.Cond_Air_Out=conv(Cond_Air_Out,MA);
+    
+    %Refrigerant temps
     Evaporator_Refrigerant_In=input_struct.LF.Evaporator_Refrigerant_In;
     Evaporator_Refrigerant_Out=input_struct.LF.Evaporator_Refrigerant_Out;
     Condenser_Refrigerant_In=input_struct.LF.Condenser_Refrigerant_In;
-    % todo add temperature filters
-    
+    filtered_struct.LF.Evaporator_Refrigerant_In=conv(Evaporator_Refrigerant_In,MA);
+    filtered_struct.LF.Evaporator_Refrigerant_Out=conv(Evaporator_Refrigerant_Out,MA);
+    filtered_struct.LF.Condenser_Refrigerant_In=conv(Condenser_Refrigerant_In,MA);
+   
     % ==== Filter Displacement signal ===========
-    filtered_struct.HF.Belt_Displacement=input_struct.LF.Belt_Displacement;
+    %No filter
+    filtered_struct.HF.Belt_Displacement=input_struct.HF.Belt_Displacement;
     
-    % ==== Fitler Accelerometer signals =========
+    % ==== Filter Accelerometer signals =========
+    %No filter
     %X
     filtered_struct.HF.Accelerometer_X_Axis=input_struct.HF.Accelerometer_X_Axis;
     %Y
@@ -65,7 +84,7 @@ P_0=eye(2);
     %Z
     filtered_struct.HF.Accelerometer_Z_Axis=input_struct.HF.Accelerometer_Z_Axis;
 
-
-
+    % ==== Filter Current =========
+    %No filter
 
 end

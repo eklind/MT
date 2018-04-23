@@ -71,6 +71,9 @@ P_0=eye(2);
     filtered_struct.LF.Evaporator_Refrigerant_Out=conv(Evaporator_Refrigerant_Out,MA);
     filtered_struct.LF.Condenser_Refrigerant_In=conv(Condenser_Refrigerant_In,MA);
    
+    % ==== Filter Current =========
+    %No filter
+    
     % ==== Filter Displacement signal ===========
     %No filter
     filtered_struct.HF.Belt_Displacement=input_struct.HF.Belt_Displacement;
@@ -84,7 +87,6 @@ P_0=eye(2);
     %Z
     filtered_struct.HF.Accelerometer_Z_Axis=input_struct.HF.Accelerometer_Z_Axis;
 
-    % ==== Filter Current =========
-    %No filter
+
 
 end

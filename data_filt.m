@@ -4,89 +4,58 @@ function filtered_struct =data_filt(input_struct)
 % no fitlering is done
 filtered_struct = input_struct;
 % ======== Filter instances ===================================
-
-%Moving mean
-k=10;
-MA = ones(1,k)*(1/k); %can be used as moving average
-
-%Kalman rpm parameters
-Td=1;
-A=[1 Td; 0 0];
-H=[1 0];
-Q=0.02;
-R=1;
-x_0=[0;0];
-P_0=eye(2);
-
+f_w=5; %filter window
+o_w=5; %outlier window
 %===============================================================    
 
     % ==== Filter RPM signals ===================
-    %Kalman filter
-    rpm_motor = input_struct.LF.Drive_RPM;
-    rpm_comp = input_struct.LF.Comp_RPM;
-    
-    rpm_motor_filt = kalmanFilter(rpm_motor,[rpm_motor(1);0],P_0,A,Q,H,R);
-    rpm_comp_filt = kalmanFilter(rpm_comp,[rpm_comp(1);0],P_0,A,Q,H,R);
-    
-    filtered_struct.LF.Drive_RPM = rpm_motor_filt(1,:);
-    filtered_struct.LF.Compressor_RPM = rpm_comp_filt(1,:);
+    %moving average
+    filtered_struct.LF.Drive_RPM = movmean(hampel(input_struct.LF.Drive_RPM,5),5);
+    filtered_struct.LF.Comp_RPM = movmean(hampel(input_struct.LF.Comp_RPM,5),5);
     
     % ==== Filter Pressure signals ==============
     %moving average
-    P_Suc = input_struct.LF.Compressor_Suction_Pressure;
-    P_Dis = input_struct.LF.Compressor_Discharge_Pressure; 
-    
-    P_Suc_filt = conv(P_Suc,MA);
-    P_Dis_filt = conv(P_Dis,MA);
-     
-    filtered_struct.LF.Compressor_Suction_Pressure = P_Suc_filt;
-    filtered_struct.LF.Compressor_Discharge_Pressure = P_Dis_filt;
+    filtered_struct.LF.Compressor_Suction_Pressure =movmean(hampel(input_struct.LF.Compressor_Suction_Pressure,5),5);
+    filtered_struct.LF.Compressor_Discharge_Pressure =movmean(hampel(input_struct.LF.Compressor_Discharge_Pressure,5),5);
     
     % ==== Filter Temperature signals ===========
-    %Moving average
     
     %belt system
-    Compressor_Belt_Temp = input_struct.LF.Compressor_Belt_Temp;
-    Pulley_Surface_Temp = input_struct.LF.Pulley_Surface_Temp;
-    Drive_Belt_Surface_Temp = input_struct.LF.Drive_Belt_Surface_Temp;
-    filtered_struct.LF.Compressor_Belt_Temp_filt=conv(Compressor_Belt_Temp,MA);
-    filtered_struct.LF.Pulley_Surface_Temp_filt=conv(Pulley_Surface_Temp,MA);
-    filtered_struct.LF.Drive_Belt_Surface_Temp_filt=conv(Drive_Belt_Surface_Temp,MA);
+    %removes outlier and then moving average
+    filtered_struct.LF.Compressor_Belt_Temp_filt=movmean(hampel(input_struct.LF.Compressor_Belt_Temp,5),5);
+    filtered_struct.LF.Pulley_Surface_Temp_filt=movmean(hampel(input_struct.LF.Pulley_Surface_Temp,5),5);
+    filtered_struct.LF.Drive_Belt_Surface_Temp_filt=movmean(hampel(input_struct.LF.Drive_Belt_Surface_Temp,5),5);
     
     %Air temps
-    Evap_Air_In = input_struct.LF.Evap_Air_In;
-    Evap_Air_Out = input_struct.LF.Evap_Air_Out;
-    Cond_Air_In = input_struct.LF.Cond_Air_In;
-    Cond_Air_Out = input_struct.LF.Cond_Air_Out;
-    filtered_struct.LF.Evap_Air_In=conv(Evap_Air_In,MA);
-    filtered_struct.LF.Evap_Air_Out=conv(Evap_Air_Out,MA);
-    filtered_struct.LF.Cond_Air_In=conv(Cond_Air_In,MA);
-    filtered_struct.LF.Cond_Air_Out=conv(Cond_Air_Out,MA);
+    %removes outlier and then moving average
+    filtered_struct.LF.Evap_Air_In=movmean(hampel(input_struct.LF.Evap_Air_In,5),5);
+    filtered_struct.LF.Evap_Air_Out=movmean(hampel(input_struct.LF.Evap_Air_Out,5),5);
+    filtered_struct.LF.Cond_Air_In=movmean(hampel(input_struct.LF.Cond_Air_In,5),5);
+    filtered_struct.LF.Cond_Air_Out=movmean(hampel(input_struct.LF.Cond_Air_Out,5),5);
+    
     
     %Refrigerant temps
-    Evaporator_Refrigerant_In=input_struct.LF.Evaporator_Refrigerant_In;
-    Evaporator_Refrigerant_Out=input_struct.LF.Evaporator_Refrigerant_Out;
-    Condenser_Refrigerant_In=input_struct.LF.Condenser_Refrigerant_In;
-    filtered_struct.LF.Evaporator_Refrigerant_In=conv(Evaporator_Refrigerant_In,MA);
-    filtered_struct.LF.Evaporator_Refrigerant_Out=conv(Evaporator_Refrigerant_Out,MA);
-    filtered_struct.LF.Condenser_Refrigerant_In=conv(Condenser_Refrigerant_In,MA);
+    %removes outlier and then moving average
+    filtered_struct.LF.Evaporator_Refrigerant_In=movmean(hampel(input_struct.LF.Evaporator_Refrigerant_In,5),5);
+    filtered_struct.LF.Evaporator_Refrigerant_Out=movmean(hampel(input_struct.LF.Evaporator_Refrigerant_Out,5),5);
+    filtered_struct.LF.Condenser_Refrigerant_In=movmean(hampel(input_struct.LF.Condenser_Refrigerant_In,5),5);
    
-    % ==== Filter Current =========
-    %No filter
-    
+    % ==== Filter Current and Voltage =========
+    %removes outlier and then moving average
+    filtered_struct.LF.VFD_Voltage_Output=movmean(hampel(input_struct.LF.VFD_Voltage_Output,5),5);
+    filtered_struct.LF.VFD_Current_Output=movmean(hampel(input_struct.LF.VFD_Current_Output,5),5);
+   
+      
     % ==== Filter Displacement signal ===========
-    %No filter
+    %No filter yet, add frequency filter
     filtered_struct.HF.Belt_Displacement=input_struct.HF.Belt_Displacement;
     
     % ==== Filter Accelerometer signals =========
-    %No filter
+    %Unfiltered(low noise)
     %X
     filtered_struct.HF.Accelerometer_X_Axis=input_struct.HF.Accelerometer_X_Axis;
     %Y
     filtered_struct.HF.Accelerometer_Y_Axis=input_struct.HF.Accelerometer_Y_Axis;
     %Z
     filtered_struct.HF.Accelerometer_Z_Axis=input_struct.HF.Accelerometer_Z_Axis;
-
-
-
 end

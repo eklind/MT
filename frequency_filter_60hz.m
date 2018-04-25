@@ -1,6 +1,9 @@
 function laser_filtered=frequency_filter_60hz(laser)
+f=10000; %sample frequency
+Wo = 60/(f/2); %
+BW = Wo/20; %bandwidth
 
-Wo = 60/(10000/2);  BW = Wo/35*3;
+%filter coefficients
 [b60,a60] = iirnotch(Wo,BW); 
 [b120,a120] = iirnotch(2*Wo,BW);
 [b180,a180] = iirnotch(3*Wo,BW);
@@ -8,7 +11,7 @@ Wo = 60/(10000/2);  BW = Wo/35*3;
 [b300,a300] = iirnotch(5*Wo,BW);
 [b360,a360] = iirnotch(6*Wo,BW);
 %remove outliers
-laser=hampel(laser,5);
+laser=hampel(laser,15);
 
 % apply filters
 laser_filt=filter(b60,a60,laser);

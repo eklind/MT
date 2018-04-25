@@ -22,9 +22,9 @@ o_w=5; %outlier window
     
     %belt system
     %removes outlier and then moving average
-    filtered_struct.LF.Compressor_Belt_Temp_filt=movmean(hampel(input_struct.LF.Compressor_Belt_Temp,5),5);
-    filtered_struct.LF.Pulley_Surface_Temp_filt=movmean(hampel(input_struct.LF.Pulley_Surface_Temp,5),5);
-    filtered_struct.LF.Drive_Belt_Surface_Temp_filt=movmean(hampel(input_struct.LF.Drive_Belt_Surface_Temp,5),5);
+    filtered_struct.LF.Compressor_Belt_Temp=movmean(hampel(input_struct.LF.Compressor_Belt_Temp,5),5);
+    filtered_struct.LF.Pulley_Surface_Temp=movmean(hampel(input_struct.LF.Pulley_Surface_Temp,5),5);
+    filtered_struct.LF.Drive_Belt_Surface_Temp=movmean(hampel(input_struct.LF.Drive_Belt_Surface_Temp,5),5);
     
     %Air temps
     %removes outlier and then moving average

@@ -4,8 +4,8 @@ function filtered_struct =data_filt(input_struct)
 % no fitlering is done
 filtered_struct = input_struct;
 
-LF_fields = fieldnames(data.LF);
-HF_fields = fieldnames(data.HF);
+LF_fields = fieldnames(input_struct.LF);
+HF_fields = fieldnames(input_struct.HF);
 
 % ======== Filter instances ===================================
 fs = input_struct.HF.Sampling_Rate_Hz;

@@ -51,7 +51,7 @@ wc_butt = 250/(0.5*fs); %cut-off at 250hz
    
     % ==== Filter Current and Voltage =========
     %removes outlier and then moving average
-    if(sum(contains(LF_fields),{'VFD_Voltage_Output','VFD_Current_Output'}))
+    if(sum(contains(LF_fields,{'VFD_Voltage_Output','VFD_Current_Output'})))
         filtered_struct.LF.VFD_Voltage_Output=movmean(hampel(input_struct.LF.VFD_Voltage_Output,5),5);
         filtered_struct.LF.VFD_Current_Output=movmean(hampel(input_struct.LF.VFD_Current_Output,5),5);
     end

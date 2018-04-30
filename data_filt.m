@@ -48,7 +48,7 @@ o_w=5; %outlier window
       
     % ==== Filter Displacement signal ===========
     %No filter yet, add frequency filter
-    filtered_struct.HF.Belt_Displacement=input_struct.HF.Belt_Displacement;
+    filtered_struct.HF.Belt_Displacement=frequency_filter_60hz(input_struct.HF.Belt_Displacement);
     
     % ==== Filter Accelerometer signals =========
     %Unfiltered(low noise)

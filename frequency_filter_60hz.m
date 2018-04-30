@@ -11,7 +11,7 @@ BW = Wo/20; %bandwidth
 [b300,a300] = iirnotch(5*Wo,BW);
 [b360,a360] = iirnotch(6*Wo,BW);
 %remove outliers
-laser=hampel(laser,15);
+laser=hampel(laser,30);
 
 % apply filters
 laser_filt=filter(b60,a60,laser);

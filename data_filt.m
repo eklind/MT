@@ -3,9 +3,15 @@ function filtered_struct =data_filt(input_struct)
 %Copy the structs so the returned struct will have the same values if
 % no fitlering is done
 filtered_struct = input_struct;
+
 % ======== Filter instances ===================================
+fs = input_struct.HF.Sampling_Rate_Hz;
 f_w=5; %filter window
 o_w=5; %outlier window
+
+% Butterworth low-pass filter for accelerometer
+wc_butt = 250/(0.5*fs); %cut-off at 250hz
+[B_butt,A_butt] = butter(9,wc_butt,'low'); 
 %===============================================================    
 
     % ==== Filter RPM signals ===================
@@ -53,9 +59,9 @@ o_w=5; %outlier window
     % ==== Filter Accelerometer signals =========
     %Unfiltered(low noise)
     %X
-    filtered_struct.HF.Accelerometer_X_Axis=input_struct.HF.Accelerometer_X_Axis;
+    filtered_struct.HF.Accelerometer_X_Axis=filtfilt(B_butt,A_butt,input_struct.HF.Accelerometer_X_Axis);
     %Y
-    filtered_struct.HF.Accelerometer_Y_Axis=input_struct.HF.Accelerometer_Y_Axis;
+    filtered_struct.HF.Accelerometer_Y_Axis=filtfilt(B_butt,A_butt,input_struct.HF.Accelerometer_Y_Axis);
     %Z
-    filtered_struct.HF.Accelerometer_Z_Axis=input_struct.HF.Accelerometer_Z_Axis;
+    filtered_struct.HF.Accelerometer_Z_Axis=filtfilt(B_butt,A_butt,input_struct.HF.Accelerometer_Z_Axis);
 end

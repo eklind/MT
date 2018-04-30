@@ -59,9 +59,9 @@ wc_butt = 250/(0.5*fs); %cut-off at 250hz
     % ==== Filter Accelerometer signals =========
     %Unfiltered(low noise)
     %X
-    filtered_struct.HF.Accelerometer_X_Axis=filtfilt(B,A,input_struct.HF.Accelerometer_X_Axis);
+    filtered_struct.HF.Accelerometer_X_Axis=filtfilt(B_butt,A_butt,input_struct.HF.Accelerometer_X_Axis);
     %Y
-    filtered_struct.HF.Accelerometer_Y_Axis=filtfilt(B,A,input_struct.HF.Accelerometer_Y_Axis);
+    filtered_struct.HF.Accelerometer_Y_Axis=filtfilt(B_butt,A_butt,input_struct.HF.Accelerometer_Y_Axis);
     %Z
-    filtered_struct.HF.Accelerometer_Z_Axis=filtfilt(B,A,input_struct.HF.Accelerometer_Z_Axis);
+    filtered_struct.HF.Accelerometer_Z_Axis=filtfilt(B_butt,A_butt,input_struct.HF.Accelerometer_Z_Axis);
 end

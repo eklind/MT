@@ -34,52 +34,16 @@ function data_structure = make_data_struct(filepath)
  % ====== If a filepath is passed as argument, it loads an .xlsx file   
     
 if(nargin>=1)
-    %====== Load raw data from tab 3 and 4 in file 'filename' =========
-    [~,lf_sensors,~] = xlsread(filepath,4,'A1:Z1');
-    [~,hf_sensors,~] = xlsread(filepath,5,'A1:Z1');
-    n_lf_sensors=size(lf_sensors(1,:));
-    n_hf_sensors=size(hf_sensors(1,:)); 
-
-    [lf_data,~,~] = xlsread(filepath,4);
-    [hf_data,~,~] = xlsread(filepath,5);
-    
-    % ========= Create two data structures, for high and low speed sampling.
-    % Calculate sample frequencies
-    low_freq = 1/mean(diff(lf_data(:,1)));
-    high_freq = 1/mean(diff(hf_data(:,1)));
-    LF = struct('Sampling_Rate_Hz',low_freq);
-    HF = struct('Sampling_Rate_Hz',high_freq);
-
-
-    % ========= Format input data to fit with a struct ================
-    str_lf = string(lf_sensors);
-    str_lf = deblank(str_lf);
-    str_lf = replace(str_lf,' ','_');
-    str_lf = replace(str_lf,'(','');
-    str_lf = replace(str_lf,')','');
-
-    str_hf = string(hf_sensors);
-    str_hf = deblank(str_hf);
-    str_hf = replace(str_hf,' ','_');
-    str_hf = replace(str_hf,'(','');
-    str_hf = replace(str_hf,')','');
-
-
-% === Assign values to the correspondning sensor name in the struct =====
-
-    for i=1:n_lf_sensors(2)
-        LF = setfield(LF,str_lf{i},lf_data(:,i));
-    end
-
-    for j=1:n_hf_sensors(2)
-        HF = setfield(HF,str_hf{j},hf_data(:,j));
-    end
-   
+    % ===== If a file path is specified
+    tdms_data = TDMS_getStruct(filepath);
+else
     % ===== If no input arguments, tdms-file has to be chosen  ======
-else     
-     tdms_data = TDMS_getStruct();
+   tdms_data = TDMS_getStruct();
+end  
+     
+     
      %remove temperature offsets
-     tdms_data = calibrate_temps(tdms_data);
+%      tdms_data = calibrate_temps(tdms_data);
      
      lf_data_struct = struct2cell(tdms_data.g_1Hz_Data);
      hf_data_struct = struct2cell(tdms_data);%s2
@@ -101,24 +65,14 @@ else
         HF = setfield(HF,name,hf_data_struct{j}.data);
      end
      
-%      HF = setfield(HF,'Time__sec_',...
-%          hf_data_struct.Time__sec_.data);
-%      HF = setfield(HF,'Belt_Displacement',...
-%          hf_data_struct.Belt_Displacement.data);
-%      HF = setfield(HF,'Accelerometer_X',...
-%          hf_data_struct.Accelerometer_X_Axis.data);
-%      HF = setfield(HF,'Accelerometer_Y',...
-%          hf_data_struct.Accelerometer_Y_Axis.data);
-%      HF = setfield(HF,'Accelerometer_Z',...
-%          hf_data_struct.Accelerometer_Z_Axis.data);
-     
-    
-end
     
     
 % === Concatenate the three structs into one ==================== 
     data_structure.LF=LF;
     data_structure.HF=HF;
+    
+% === Perform filtering on the raw data ==============
+data_structure = data_filt(data_structure);
 
 % ==== Return and save the data structure ============
 

@@ -1,5 +1,4 @@
 function struct_short=cut_struct(struct,s_start,s_stop)
-struct.HF.Sampling_Rate_Hz
 
 %returns part of struct
 %input struct, start index and stop index, scales for HF

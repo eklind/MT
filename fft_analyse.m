@@ -32,8 +32,9 @@ fft_data=fft_data(1:num/2+1);
 peak(1)=f(peak(1));
 if(show_plot==true)
     %plot1
-    subplot(2,1,1)
-    stem(f(2:end),fft_data(2:length(f)));
+    %subplot(2,1,1)
+    figure
+    plot(f(2:end),fft_data(2:length(f)));
     hold on
     plot(peak(1),peak(2),'*')
     ylabel('Magnitude')
@@ -43,12 +44,12 @@ if(show_plot==true)
     legend('Vibration data')
     hold off
     
-    %plot2
-    subplot(2,1,2)
-    plot(data);
-    tlt=strcat('Time domain, sampled at: ',num2str(hz),'hz');
-    title(tlt)
-    ylabel('Amplitude')
-    xlabel('Sample')  
+%     %plot2
+%     subplot(2,1,2)
+%     plot(data);
+%     tlt=strcat('Time domain, sampled at: ',num2str(hz),'hz');
+%     title(tlt)
+%     ylabel('Amplitude')
+%     xlabel('Sample')  
 end
 end

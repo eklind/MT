@@ -4,6 +4,9 @@ function filtered_struct =data_filt(input_struct)
 % no fitlering is done
 filtered_struct = input_struct;
 
+LF_fields = fieldnames(input_struct.LF);
+HF_fields = fieldnames(input_struct.HF);
+
 % ======== Filter instances ===================================
 fs = input_struct.HF.Sampling_Rate_Hz;
 f_w=5; %filter window
@@ -48,9 +51,10 @@ wc_butt = 250/(0.5*fs); %cut-off at 250hz
    
     % ==== Filter Current and Voltage =========
     %removes outlier and then moving average
-    filtered_struct.LF.VFD_Voltage_Output=movmean(hampel(input_struct.LF.VFD_Voltage_Output,5),5);
-    filtered_struct.LF.VFD_Current_Output=movmean(hampel(input_struct.LF.VFD_Current_Output,5),5);
-   
+    if(sum(contains(LF_fields,{'VFD_Voltage_Output','VFD_Current_Output'})))
+        filtered_struct.LF.VFD_Voltage_Output=movmean(hampel(input_struct.LF.VFD_Voltage_Output,5),5);
+        filtered_struct.LF.VFD_Current_Output=movmean(hampel(input_struct.LF.VFD_Current_Output,5),5);
+    end
       
     % ==== Filter Displacement signal ===========
     %No filter yet, add frequency filter

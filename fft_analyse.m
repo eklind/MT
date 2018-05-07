@@ -2,15 +2,15 @@ function [fft_data,f,peak] = fft_analyse(data,hz,show_plot,num)
 %returns frequency data up to Nyquist frequency
 %plots data if third input==true
 %if number(even or power of 2) in entered, scales the fft to that amount of values
-data_filt=outlier_detection(data,0);
-data_filt=data_filt-mean(data_filt);
+%data_filt=outlier_detection(data,0);
+data_filt=data-mean(data);
 %data_filt=detrend(data_filt); 
 L=length(data);
 
 %frequency vector and abs fft data
 f = hz*(0:(L/2))/L;
 f=f';
-fft_data=2*abs(fft(data_filt,L))/(L);
+%fft_data=2*abs(fft(data_filt,L))/(L);
 %fft_data_n=fft_data(1:length(f));
 if(nargin<3)
    show_plot=true; 
@@ -22,6 +22,8 @@ end
 res_hz=hz/num;
 %do transformation
 fft_data=2*abs(fft(data_filt,num))/(num);
+%zero up to 5 hz
+fft_data(1:floor(5/res_hz))=0;
 %get frequency vector
 f=(hz/length(fft_data))*(0:length(fft_data)/2);
 

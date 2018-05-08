@@ -26,16 +26,17 @@ res_hz=hz/num;
 %do transformation
 fft_data=2*abs(fft(data_filt,num))/(num);
 %zero up to 5 hz
-fft_data(1:floor(5/res_hz))=0;
+fft_data(1)=0;
+%fft_data(1:floor(5*res_hz))=0;
 %get frequency vector
 f=(hz/length(fft_data))*(0:length(fft_data)/2);
 
 %prepare output(first half of frequency
-f=f(1:end);
-fft_data=fft_data(1:num/2+1); 
+%f=f(1:end);
+%fft_data=fft_data(1:num/2+1); 
 
 %return n_peaks largest peaks
-fft_data_max=fft_data;
+fft_data_max=fft_data(1:num/2);
 for n=1:n_peaks
     [M_temp,I_temp]=max(fft_data_max);  %prev peak(2) and peak(1)
     peak(1,n)=f(I_temp); %frequency
@@ -47,11 +48,11 @@ if(show_plot==true)
     %plot1
     %subplot(2,1,1)
     figure
-    plot(f(2:end),fft_data(2:length(f)));
+    plot(f(1:end),fft_data(1:length(f)));
     hold on
     plot(peak(1,:),peak(2,:),'*')
     ylabel('Magnitude')
-    tlt=strcat('Frequency domain, sampled at: ',num2str(hz),'hz,','resolution:',num2str(res_hz),'hz','peak,',num2str(peak(2)));
+    tlt=strcat('|Frequency domain, sampled at: ',num2str(hz),'hz|','|resolution:',num2str(res_hz),'hz|','|peak at:',num2str(peak(1,1)),'hz|');
     title(tlt)
     xlabel('Frequency')
     legend('Vibration data')

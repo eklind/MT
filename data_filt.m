@@ -13,7 +13,7 @@ f_w=5; %filter window
 o_w=5; %outlier window
 
 % Butterworth low-pass filter for accelerometer
-wc_butt = 2500/(0.5*fs); %cut-off at 800hz
+wc_butt = 400/(0.5*fs); %cut-off at 800hz
 [B_butt,A_butt] = butter(9,wc_butt,'low'); 
 %===============================================================    
 

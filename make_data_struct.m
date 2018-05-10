@@ -11,6 +11,7 @@ function data_structure = make_data_struct(filepath,noInput)
 
     % Gui for parameter input
     dim1=[1 50];
+
     if(nargin>=2)
         run_param = {'1','1','1','1','1',' ','n'};
     else
@@ -24,7 +25,7 @@ function data_structure = make_data_struct(filepath,noInput)
     amb_temp = str2double(run_param{5});
     comments = run_param{6};
     save_opt = run_param{7};
-
+    
 
 
     %=========== Create the top level data structure ==============
@@ -39,10 +40,21 @@ function data_structure = make_data_struct(filepath,noInput)
     
 if(nargin>=1)
     % ===== If a file path is specified
-    tdms_data = TDMS_getStruct(filepath);
+    try
+        tdms_data = TDMS_getStruct(filepath);
+    catch disp('Error while loading')
+        data_structure.comments = 'EMPTY';
+        return
+    end
 else
     % ===== If no input arguments, tdms-file has to be chosen  ======
-   tdms_data = TDMS_getStruct();
+   tdms_data = TDMS_getStruct;
+   try
+        tdms_data = TDMS_getStruct(filepath);
+    catch disp('Error while loading')
+        data_structure.comments = 'EMPTY';
+        return
+    end
 end  
      
      

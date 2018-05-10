@@ -1,4 +1,4 @@
-function data_structure = make_data_struct(filepath) 
+function data_structure = make_data_struct(filepath,noInput) 
 % Input the filepath to an excel file outputed from the DAQ system,
 % returns a data structure with all the measurements.
 
@@ -11,8 +11,12 @@ function data_structure = make_data_struct(filepath)
 
     % Gui for parameter input
     dim1=[1 50];
-    deaf_param = {'1','1','1','1','1',' ','n'};
-    run_param = inputdlg(params,'Enter Run Parameters',dim1,deaf_param);
+    if(nargin>=2)
+        run_param = {'1','1','1','1','1',' ','n'};
+    else
+        deaf_param = {'1','1','1','1','1',' ','n'};
+        run_param = inputdlg(params,'Enter Run Parameters',dim1,deaf_param);
+    end
     nom_vel = str2double(run_param{1});
     nom_ten_motor = str2double(run_param{2});
     nom_ten_comp = str2double(run_param{3});

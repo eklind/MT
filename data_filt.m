@@ -13,14 +13,21 @@ f_w=5; %filter window
 o_w=5; %outlier window
 
 % Butterworth low-pass filter for accelerometer
-wc_butt = 800/(0.5*fs); %cut-off at 800hz
+wc_butt = 2500/(0.5*fs); %cut-off at 800hz
 [B_butt,A_butt] = butter(9,wc_butt,'low'); 
 %===============================================================    
 
     % ==== Filter RPM signals ===================
     %moving average
+    
     filtered_struct.LF.Drive_RPM = movmean(hampel(input_struct.LF.Drive_RPM,5),5);
     filtered_struct.LF.Comp_RPM = movmean(hampel(input_struct.LF.Comp_RPM,5),5);
+    
+    %set low rpm to 0
+    isDriveRPM=(filtered_struct.LF.Drive_RPM>600);
+    isCompRPM=(filtered_struct.LF.Comp_RPM>600*1.23);
+    filtered_struct.LF.Drive_RPM=filtered_struct.LF.Drive_RPM.*isDriveRPM;
+    filtered_struct.LF.Comp_RPM=filtered_struct.LF.Comp_RPM.*isCompRPM;
     
     % ==== Filter Pressure signals ==============
     %moving average

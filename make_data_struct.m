@@ -11,8 +11,9 @@ function data_structure = make_data_struct(filepath)
 
     % Gui for parameter input
     dim1=[1 50];
-    deaf_param = {'1','1','1','1','1',' ','n'};
-    run_param = inputdlg(params,'Enter Run Parameters',dim1,deaf_param);
+%     deaf_param = {'1','1','1','1','1',' ','n'};
+%     run_param = inputdlg(params,'Enter Run Parameters',dim1,deaf_param);
+run_param = {'1','1','1','1','1',' ','n'};
     nom_vel = str2double(run_param{1});
     nom_ten_motor = str2double(run_param{2});
     nom_ten_comp = str2double(run_param{3});
@@ -20,7 +21,7 @@ function data_structure = make_data_struct(filepath)
     amb_temp = str2double(run_param{5});
     comments = run_param{6};
     save_opt = run_param{7};
-
+    
 
 
     %=========== Create the top level data structure ==============
@@ -35,10 +36,21 @@ function data_structure = make_data_struct(filepath)
     
 if(nargin>=1)
     % ===== If a file path is specified
-    tdms_data = TDMS_getStruct(filepath);
+    try
+        tdms_data = TDMS_getStruct(filepath);
+    catch disp('Error while loading')
+        data_structure.comments = 'EMPTY';
+        return
+    end
 else
     % ===== If no input arguments, tdms-file has to be chosen  ======
-   tdms_data = TDMS_getStruct();
+   tdms_data = TDMS_getStruct;
+   try
+        tdms_data = TDMS_getStruct(filepath);
+    catch disp('Error while loading')
+        data_structure.comments = 'EMPTY';
+        return
+    end
 end  
      
      

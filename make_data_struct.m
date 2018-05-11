@@ -50,7 +50,7 @@ else
     % ===== If no input arguments, tdms-file has to be chosen  ======
    tdms_data = TDMS_getStruct;
    try
-        tdms_data = TDMS_getStruct(filepath);
+        tdms_data = TDMS_getStruct();
     catch disp('Error while loading')
         data_structure.comments = 'EMPTY';
         return

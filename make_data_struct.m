@@ -42,16 +42,15 @@ if(nargin>=1)
     % ===== If a file path is specified
     try
         tdms_data = TDMS_getStruct(filepath);
-    catch disp('Error while loading')
+    catch disp('Error while loading, CHECK YOU FUCKING CODE AGAIN!')
         data_structure.comments = 'EMPTY';
         return
     end
 else
     % ===== If no input arguments, tdms-file has to be chosen  ======
-   tdms_data = TDMS_getStruct;
    try
-        tdms_data = TDMS_getStruct(filepath);
-    catch disp('Error while loading')
+        tdms_data = TDMS_getStruct();
+    catch disp('Error while loading, CHECK YOU FUCKING CODE AGAIN')
         data_structure.comments = 'EMPTY';
         return
     end

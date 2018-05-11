@@ -18,4 +18,9 @@ metric_struct.mean=mean(data,2); %first moment of shunks
 metric_struct.var=var(data,0,2); %second moment of shunks
 metric_struct.skew=skewness(data,0,2); %third moment of shunks
 metric_struct.kurtosis=kurtosis(data,0,2); %fourth moment of shunks
+
+E=sum(data.^2,2);
+metric_struct.power=E/length(data); % Signal power
+
+
 end

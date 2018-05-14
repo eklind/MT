@@ -47,7 +47,7 @@ end
 if(show_plot==true)
     %plot1
     %subplot(2,1,1)
-    figure
+    %figure
     plot(f(1:end),fft_data(1:length(f)));
     hold on
     plot(peak(1,:),peak(2,:),'*')

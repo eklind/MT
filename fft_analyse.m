@@ -46,9 +46,9 @@ end
 
 if(show_plot==true)
     %plot1
-    %subplot(2,1,1)
-    figure
-    plot(f(1:end),fft_data(1:length(f)));
+%     subplot(2,1,1)
+%     figure
+    plot(f(1:end),fft_data(1:length(f)),'linewidth',1);
     hold on
     plot(peak(1,:),peak(2,:),'*')
     ylabel('Magnitude')

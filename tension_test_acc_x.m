@@ -1,8 +1,8 @@
 %tension_est_acc_x
 
 %% Import all files in map
-search_path="C:\Users\jonat\Documents\Thesis\MT\NoLoad\*.tdms";
-folder_path = "C:\Users\jonat\Documents\Thesis\MT\NoLoad\";
+search_path="C:\Users\jonat\Documents\Thesis\MT\HighLoad\*.tdms";
+folder_path = "C:\Users\jonat\Documents\Thesis\MT\HighLoad\";
 d=dir(search_path);
 Nd = length(d);
 clearvars data;
@@ -19,31 +19,41 @@ style={'.-','.-','.-','.-','.-','*-','*-','*-','*-','*-','*-'};
 fs=2500;
 scale=100;
 fftdata=[];
-topFreq=100;
+topFreq=200;
 lowFreq=1;
 %high 50:350
 %no 50:250
 %low 120:240
-T.high=50:350;
-T.Low=50:250;
+T.High=340:400;
+T.Low=160:220;
 T.No=120:240;
 
-for i=1:1:11
+time=T.No;
+data_current=dataNo;
+for i=1:11
     %z and y best
-    av_speed(i)=mean(dataNo(i).LF.Drive_RPM(T.No));
-    fftdata(i,:)=abs(fft(dataNo(i).HF.Accelerometer_Y_Axis(T.No(1)*fs:T.No(end)*fs),fs*scale));
+    av_speed(i)=mean(data_current(i).LF.Comp_RPM(time));
+    av_pressure(i)=mean(data_current(i).LF.Compressor_Discharge_Pressure(time));
+    av_I(i)=mean(data_current(i).LF.VFD_Current_Output(time));
+    fftdata(i,:)=abs(fft(data_current(i).HF.Accelerometer_Z_Axis(time(1)*fs:time(end)*fs),fs*scale));
+    %fftdata(i,:)=rceps(data_current(i).HF.Accelerometer_Z_Axis(time(1)*fs:time(end)*fs));
     fftdata(i,1:5)=0;
     L=length(fftdata(i,1:end/2));
     f_vec=[1:L]/scale;
     %range=[0.95*scale:1.05*scale]*25;
-    % x=(f_vec(1:topFreq*scale)*60/av_speed(i))/1.2340;
-    x=(f_vec(lowFreq*scale:topFreq*scale)*60/av_speed(i));
+    x=(f_vec(lowFreq*scale:topFreq*scale));
+    %x=(f_vec(lowFreq*scale:topFreq*scale));
+    %x=(f_vec(lowFreq*scale:topFreq*scale)*60);
     fdata=fftdata(i,lowFreq*scale:topFreq*scale);
+    %hold off
     plot(x,fdata,style{i});
-    %axis([1 1.015 0 50000])
+    %axis([1 1.015 0 50000]) 
+    
     hold on
+    %pause() 
 end
 legend(f);
+
 
 
 %%
@@ -56,13 +66,41 @@ xlabel('Tension');
 ylabel('Frequency'); 
 
 %%
-for i=1:11
+for i=1:1
+hold off
+plot(dataNo(i).LF.Drive_RPM(1:250),style{i})
 hold on
-plot(dataNo(i).LF.Drive_RPM(50:250))
-end
-legend(f);
+%plot(dataHigh(i).LF.VFD_Voltage_Output(1:250).*dataHigh(i).LF.Compressor_Suction_Pressure(1:250)./10  ,style{i}) %3.95???
+plot(dataNo(i).LF.VFD_Voltage_Output(1:250)*3.95)
+%plot(dataHigh(i).LF.VFD_Current_Output(1:250)*100)
+%plot(dataNo(i).LF.Compressor_Discharge_Pressure(1:250)./dataHigh(i).LF.Compressor_Suction_Pressure(1:250)*148)
+plot((dataNo(i).LF.Cond_Air_Out(1:250)-dataNo(i).LF.Cond_Air_In (1:250))*100);
+ 
+legend(f{i}); 
+%pause()
+end 
+
+%%
+
+hold off
+plot(dataLow(1).LF.Drive_RPM,style{i})
+hold on
+%plot(dataHigh(i).LF.VFD_Voltage_Output(1:250).*dataHigh(i).LF.Compressor_Suction_Pressure(1:250)./10  ,style{i}) %3.95???
+plot(dataLow(1).LF.VFD_Voltage_Output*3.95)
+%plot(dataHigh(i).LF.VFD_Current_Output(1:250)*100)
+%plot(dataNo(i).LF.Compressor_Discharge_Pressure(1:250)./dataHigh(i).LF.Compressor_Suction_Pressure(1:250)*148)
+plot((dataLow(1).LF.Evap_Air_Out-dataLow(1).LF.Evap_Air_In ));
+plot((dataLow(1).LF.Evap_Air_Out./dataLow(1).LF.Evap_Air_In )*1000);
+plot((dataLow(1).LF.Condenser_Refrigerant_In)*10);
+plot((dataLow(1).LF.Evaporator_Refrigerant_Out)*10);
+plot((dataLow(1).LF.Evaporator_Refrigerant_In)*10);
+legend(f{i}); 
+%pause()
 %%
 for i=1:11
 hold on
-mean(dataNo(i).LF.Drive_RPM(50:250))
+%plot(dataNo(i).LF.Compressor_Discharge_Pressure(1:240),style{i})
+plot(dataLow(i).LF.Compressor_Discharge_Pressure(1:220),style{i})
+plot(dataHigh(i).LF.Compressor_Discharge_Pressure(1:400),style{i})
 end
+legend(f);

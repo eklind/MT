@@ -23,6 +23,8 @@ for i=1:N
 end
 
 kurt = kurtosis(impAcc); %[1xN]
+kurt=kurt-3;
+kurt=kurt.^2;
 end
 
 

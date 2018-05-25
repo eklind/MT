@@ -21,6 +21,6 @@ metric_struct.kurtosis=kurtosis(data,0,2); %fourth moment of shunks
 
 E=sum(data.^2,2);
 metric_struct.power=E/length(data); % Signal power
-
+metric_struct.rms=rms(data);
 
 end

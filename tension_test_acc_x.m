@@ -19,18 +19,49 @@ style={'.-','.-','.-','.-','.-','*-','*-','*-','*-','*-','*-'};
 fs=2500;
 scale=100;
 fftdata=[];
-topFreq=200;
-lowFreq=1;
+
+topFreq=62;
+lowFreq=55;
+
+%topFreq=19.8; %nothing
+%lowFreq=19.4;
+
+%topFreq=15.88;
+%lowFreq=15.36; %rms increase with lower tension
+
+%topFreq=26;
+%lowFreq=19;
+
+%topFreq=13;
+%lowFreq=9;
+%topFreq=25; %decreasing with lower tension(comp)
+%lowFreq=24.3;
+%topFreq=20.5; %decreasing with lower tension(mot)
+%lowFreq=19;
+%topFreq=60;
+%lowFreq=58;
+
+%topFreq=13; %all 1.263(no), 1.258(low), 1.257(high)
+%lowFreq=9;
+
+%topFreq=26; %1.261:1.264(no) 1.258(low) ,1.257:1.255(high)
+%lowFreq=18;
+
+%topFreq=16; %1.1:1.06(no), 1.11:0.9652(low) ,1.017:1.013(high)
+%lowFreq=14;
+
+n_peaks=2;
+remove=10;
 %high 50:350
 %no 50:250
 %low 120:240
 T.High=340:400;
 T.Low=160:220;
-T.No=120:240;
+T.No=120:220; %worked for 10 seconds
 
-time=T.No;
-data_current=dataNo;
-for i=1:11
+time=T.High;
+data_current=dataHigh;
+for i=1:1:11
     %z and y best
     av_speed(i)=mean(data_current(i).LF.Comp_RPM(time));
     av_pressure(i)=mean(data_current(i).LF.Compressor_Discharge_Pressure(time));
@@ -46,14 +77,37 @@ for i=1:11
     %x=(f_vec(lowFreq*scale:topFreq*scale)*60);
     fdata=fftdata(i,lowFreq*scale:topFreq*scale);
     %hold off
-    plot(x,fdata,style{i});
-    %axis([1 1.015 0 50000]) 
     
-    hold on
-    %pause() 
-end
+    plot(x,fdata,style{i});
+     hold on
+     rmsVal(i)=rms(fdata);
+    % plot(peak(1,:),peak(2,:),'o')
+    for n=1:n_peaks
+        [M_temp,I_temp]=max(fdata);  %prev peak(2) and peak(1)
+        peak(1,n)=x(I_temp); %frequency
+        peak(2,n)=M_temp; %magnitude
+        if(I_temp-remove<1)
+            fdata(1:I_temp+remove)=0;
+        end
+        if (I_temp+remove>length(fdata))
+                fdata(I_temp-remove:end)=0;
+        end      
+        if(I_temp+remove<=length(fdata)&&I_temp-remove>=1)
+            
+            i;
+            fdata(I_temp-remove:I_temp+remove)=0;
+        end
+    end
+     
+     p(i)=(peak(1,1)/peak(1,2));
+     if(p(i)<1)
+         %p(i)=1/p(i);
+     end
+end 
 legend(f);
-
+%
+clf
+plot(1:11,p,'.-')
 
 
 %%

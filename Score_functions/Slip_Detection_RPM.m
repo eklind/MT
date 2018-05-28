@@ -1,4 +1,4 @@
-function [score_max,score_mean,score_median] =Slip_Detection_RPM(Drive_RPM,Comp_RPM);
+function score =Slip_Detection_RPM(Drive_RPM,Comp_RPM);
 %Compares the rpm on motor and compressor side
 
 %remove when drive speed is too low
@@ -16,7 +16,5 @@ else
     ratio=Comp_RPM./Drive_RPM; 
     ratio_scaled=ratio/1.19;
 end
-    score_max=max(ratio_scaled);
-    score_mean=mean(ratio_scaled);
-    score_median=median(ratio_scaled);
+    score=mean(ratio_scaled);
 end

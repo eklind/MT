@@ -1,4 +1,4 @@
-function [score_max,score_mean,score_median]=Pinch_Detection(Drive_RPM,Compressor_Clutch,Discharge_Pressure)
+function score_vec=Pinch_Detection(Drive_RPM,Compressor_Clutch,Discharge_Pressure)
 %1x RPM vector
 %2xn vector for clutch status(boolean,time)
 %,Discharge_Pressure
@@ -36,14 +36,5 @@ if(L>1) %if any switch
             end
         end
     end
-    score_vec;
-    score_max=max(score_vec);
-    score_mean=mean(score_vec);
-    score_median=median(score_vec);
-else
-    score_vec;
-    score_max=0;
-    score_mean=0;
-    score_median=0;
 end
 end

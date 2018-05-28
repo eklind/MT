@@ -1,10 +1,10 @@
-function [score_max,score_mean,score_median]=Slip_Detection_Temperature(Temp,Compressor_Clutch,settleTime,averageTime)
+function score_vec=Slip_Detection_Temperature(Temp,Compressor_Clutch,settleTime,averageTime)
 %Slip detection for compressor or motor side using temperatures
 
 L=size(Compressor_Clutch,2); %Number off events
 stoptime=Compressor_Clutch(2,end);
 score_vec=[]; %initial score [-100:100]
-for i=1:L-1
+for i=2:L
         %looping through compressor clutch events
         event_startTime=Compressor_Clutch(2,i);
 
@@ -26,11 +26,7 @@ for i=1:L-1
         %higher score from larger difference
         score_tmp=10000*(ratio-1)^2;
         score_vec=[score_vec score_tmp];
-
 end
-score_max=max(score_vec);
-score_mean=mean(score_vec);
-score_median=median(score_vec);
 end
 
 

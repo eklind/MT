@@ -44,10 +44,31 @@ for i=1:numbers
     %log file specification
     formatSpec = '/-----Sequence%4.0f-------/\n';
     fprintf(fileID,formatSpec,i);
-    
+     %Slip in Temperature
+     try
+     Temp_diff_drive=Slip_Detection_Temperature(struct.LF.Drive_Belt_Surface_Temp(t_LF(i,1):t_LF(i,2)),...
+         struct.LF.Comp_Status,2,5);
+     
+         formatSpec = 'Slip is %4.4f \n';
+         fprintf(fileID,formatSpec,Temp_diff_drive(i));
+    catch 
+        formatSpec='Function not implemented or error \n';
+        fprintf(fileID,formatSpec);
+    end
+     
+    try
+     Temp_diff_comp=Slip_Detection_Temperature(struct.LF.Compressor_Belt_Temp(t_LF(i,1):t_LF(i,2)),...
+         struct.LF.Comp_Status,2,5);
+        formatSpec = 'Slip is %4.4f \n';
+         fprintf(fileID,formatSpec,Temp_diff_comp(i));
+    catch 
+        formatSpec='Function not implemented or error \n';
+        fprintf(fileID,formatSpec);
+    end
+     
     %Slip from RPM
     try
-         [~,Tension.Slip(i),~]=Slip_Detection_RPM(struct.LF.Drive_RPM(t_LF(i,1):t_LF(i,2)),...
+         Tension.Slip(i)=Slip_Detection_RPM(struct.LF.Drive_RPM(t_LF(i,1):t_LF(i,2)),...
              struct.LF.Comp_RPM(t_LF(i,1):t_LF(i,2))); 
          
          formatSpec = 'Slip is %4.4f \n';
@@ -59,7 +80,7 @@ for i=1:numbers
     
     %frequency relationship from accelerometer z
     try
-        [~,Tension.Freq(i),~]=Belt_Tension_Frequency(struct.HF.Accelerometer_Z_Axis(t_HF(i,1):t_HF(i,2)),...
+        Tension.Freq(i)=Belt_Tension_Frequency(struct.HF.Accelerometer_Z_Axis(t_HF(i,1):t_HF(i,2)),...
         struct.LF.Drive_RPM(t_LF(i,1):t_LF(i,2)),2500,100,15);
     
         formatSpec='RPM difference is %4.2f \n';
@@ -71,12 +92,12 @@ for i=1:numbers
     
     %detecting decrease in rpm when load is added
     try
-     [~,Tension.Pinch(i),~]= Pinch_Detection(struct.LF.Drive_RPM(t_LF(i,1):t_LF(i,2)),...
+     Tension.Pinch= Pinch_Detection(struct.LF.Drive_RPM(t_LF(i,1):t_LF(i,2)),...
          struct.LF.Comp_Status,...
          struct.LF.Compressor_Discharge_Pressure(t_LF(i,1):t_LF(i,2)));
      
         formatSpec='Pinch is %4.2f \n';
-        fprintf(fileID,formatSpec,Tension.Pinch(i));
+        fprintf(fileID,formatSpec,Tension.Pinch);
     catch 
         formatSpec='Function not implemented or error \n';
         fprintf(fileID,formatSpec);
@@ -133,15 +154,15 @@ end
 %------------ debugging/plotting results-------------------
     subplot(4,3,1)
     hold on
-    title('Temperature diff in belt')
-    ylabel('Ratio')
-    plot(Tension.Freq,'*-')
+    title('Temperature diff in drive belt')
+    ylabel('dtemp')
+    plot(Temp_diff_drive,'*-')
     
     subplot(4,3,2)
     hold on
-    title('Temperature diff in belt')
-    ylabel('Ratio')
-    plot(Tension.Freq,'*-')
+    title('Temperature diff in comp belt')
+    ylabel('dtemp')
+    plot(Temp_diff_comp,'*-')
 
     subplot(4,3,4)
     hold on

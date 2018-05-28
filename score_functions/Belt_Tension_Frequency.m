@@ -1,4 +1,4 @@
-function [score_max,score_mean,score_median]= Belt_Tension_Frequency(data,drive_rpm,fs,scale, remove)
+function [score_max,score_mean,score_median]= Belt_Tension_Frequency(Accelerometer_Z_Axis,drive_rpm,fs,scale, remove)
 %fs=2500;
 %scale=100;
 fftdata=[];
@@ -10,7 +10,7 @@ fftdata=[];
     n_peaks=2;
     
     peak=zeros(2,2);
-    fftdata=abs(fft(data.HF.Accelerometer_Z_Axis(1:end),fs*scale));
+    fftdata=abs(fft(Accelerometer_Z_Axis(1:end),fs*scale));
     %fftdata(i,1:5)=0;
     L=length(fftdata(1:end/2));
     f_vec=[1:L]/scale;
@@ -33,8 +33,8 @@ fftdata=[];
         end
     end
      
-    score_max=60*(peak(1,2)-peak(1,1));
-    score_mean=60*(peak(1,2)-peak(1,1));
-    score_median=60*(peak(1,2)-peak(1,1));
+    score_max=max(abs(peak(1,2)./peak(1,1)));
+    score_mean=mean(abs(peak(1,2)./peak(1,1)));
+    score_median=median(abs(peak(1,2)./peak(1,1)));
 end
 

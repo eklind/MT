@@ -97,8 +97,16 @@ dP=diff(movmean(P,5));
 VFDi=data_structure.LF.VFD_Current_Output;
 dP_pos = dP>0;
 
-j=1;
+
 Alternator=true;
+
+%Intital status
+if(VFDi(1)<15)
+    C_status=[0;0];
+else
+    C_status=[1;0];
+end
+j=2;
 for i=1:length(dP_pos)-5  
     if ((dP_pos(i)==1)&&(VFDi(i+5)>18))&&Alternator
         C_status(:,j)=[1;data_structure.LF.Time__sec_(i)];

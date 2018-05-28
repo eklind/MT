@@ -17,7 +17,7 @@ e=3*fs;%Time to monitor the impulse respones [s]
 %Find the time index when the compressor discharge pressure is lowest
 % and the extract the corresponding accelerometer data
 if(N)
-    if(comp_on(1,1)>=1)
+    if(comp_on(1,1)>=2)
         for i=1:N
             t1=comp_on(i)-t_before;
             t2=comp_on(i)+t_after;

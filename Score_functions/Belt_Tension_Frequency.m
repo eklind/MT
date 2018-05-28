@@ -3,7 +3,8 @@ function [score_max,score_mean,score_median]= Belt_Tension_Frequency(data,drive_
 %scale=100;
 fftdata=[];
 
-%finds the relationships between frequency peaks in a frequency interval 
+%topFreq=200;
+%lowFreq=1;
 
     f_center=mean(drive_rpm)/60;
     f_range=[f_center-0.5 f_center+0.5];

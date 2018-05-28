@@ -74,6 +74,7 @@ end
         name = lf_data_struct{i}.name;
         LF = setfield(LF,name,lf_data_struct{i}.data);
      end
+     LF.Time__sec_=LF.Time__sec_-LF.Time__sec_(1);
      
      for j=3:length(hf_data_struct(:,1))
         name = hf_data_struct{j}.name;
@@ -88,6 +89,28 @@ end
     
 % === Perform filtering on the raw data ==============
 data_structure = data_filt(data_structure);
+
+
+% === Find Compressor status ========== 
+P=data_structure.LF.Compressor_Discharge_Pressure;
+dP=diff(movmean(P,5));
+VFDi=data_structure.LF.VFD_Current_Output;
+dP_pos = dP>0;
+
+j=1;
+Alternator=true;
+for i=1:length(dP_pos)-5  
+    if ((dP_pos(i)==1)&&(VFDi(i+5)>18))&&Alternator
+        C_status(:,j)=[1;data_structure.LF.Time__sec_(i)];
+        j=j+1;
+        Alternator = false;
+    elseif((dP_pos(i)==0)&&(VFDi(i+3)<15))&&~(Alternator)
+        C_status(:,j)=[0;data_structure.LF.Time__sec_(i)];
+        j=j+1;
+        Alternator=true;
+    end
+end
+data_structure.LF.Comp_Status=C_status;
 
 % ==== Return and save the data structure ============
 

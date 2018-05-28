@@ -4,6 +4,7 @@ function score_vec=Slip_Detection_Temperature(Temp,Compressor_Clutch,settleTime,
 L=size(Compressor_Clutch,2); %Number off events
 stoptime=Compressor_Clutch(2,end);
 score_vec=[]; %initial score [-100:100]
+if(L>1)
 for i=2:L
         %looping through compressor clutch events
         event_startTime=Compressor_Clutch(2,i);
@@ -26,6 +27,9 @@ for i=2:L
         %higher score from larger difference
         score_tmp=10000*(ratio-1)^2;
         score_vec=[score_vec score_tmp];
+end
+else
+   score_vec=0; 
 end
 end
 

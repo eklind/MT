@@ -1,5 +1,5 @@
 function [score_max,score_mean,score_median]=Slip_Detection_Temperature(Temp,Compressor_Clutch,settleTime,averageTime)
-%Slip detection for compressor of motor side
+%Slip detection for compressor or motor side using temperatures
 
 L=size(Compressor_Clutch,2); %Number off events
 stoptime=Compressor_Clutch(2,end);

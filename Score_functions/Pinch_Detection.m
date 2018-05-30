@@ -24,10 +24,10 @@ if(L>1) %if any switch
 
                 %load factor, high means high load->drop is less bad
                 %load_factor=mean(Discharge_Pressure(event_startTime:event_stopTime));
-                load_factor=Discharge_Pressure(event_stopTime)/115 %115 from no load
+                load_factor=Discharge_Pressure(event_stopTime)/115; %115 from no load
 
                 %ratio between bottom and before compressor change again
-                ratio=min_val/end_val
+                ratio=min_val/end_val;
 
                 %normalize with Compressor Discharge Pressure to compensate for load
                 %score_tmp=mean_pressure-(ratio*mean_pressure);

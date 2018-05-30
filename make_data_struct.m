@@ -88,7 +88,8 @@ end
     data_structure.HF=HF;
     
 % === Perform filtering on the raw data ==============
-data_structure = data_filt(data_structure);
+
+    data_structure = data_filt(data_structure);
 
 
 % === Find Compressor status ========== 

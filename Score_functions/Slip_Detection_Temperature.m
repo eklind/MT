@@ -2,7 +2,7 @@ function score_vec=Slip_Detection_Temperature(Temp,Compressor_Clutch,settleTime,
 %Slip detection for compressor or motor side using temperatures
 
 L=size(Compressor_Clutch,2); %Number off events
-stoptime=Compressor_Clutch(2,end);
+stoptime=length(Temp);
 score_vec=[]; %initial score [-100:100]
 if(L>1)
 for i=2:L

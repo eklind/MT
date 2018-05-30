@@ -1,11 +1,11 @@
-function [score_max,score_mean,score_median]= Belt_Tension_Frequency(Accelerometer_Z_Axis,drive_rpm,fs,scale, remove)
+function score_vec= Belt_Tension_Frequency(Accelerometer_Z_Axis,rpm,fs,scale,remove)
 %fs=2500;
 %scale=100;
 fftdata=[];
 
 %finds the relationships between frequency peaks in a frequency interval 
 
-    f_center=mean(drive_rpm)/60;
+    f_center=mean(rpm)/60;
     f_range=[f_center-0.5 f_center+0.5];
     n_peaks=2;
     
@@ -33,8 +33,6 @@ fftdata=[];
         end
     end
      
-    score_max=max(abs(peak(1,2)./peak(1,1)));
-    score_mean=mean(abs(peak(1,2)./peak(1,1)));
-    score_median=median(abs(peak(1,2)./peak(1,1)));
+    score_vec=(abs(peak(1,2)./peak(1,1)));
 end
 

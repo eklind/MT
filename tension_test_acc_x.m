@@ -20,8 +20,8 @@ fs=2500;
 scale=100;
 fftdata=[];
 
-topFreq=62;
-lowFreq=55;
+topFreq=1200;
+lowFreq=1;
 
 %topFreq=19.8; %nothing
 %lowFreq=19.4;
@@ -61,21 +61,21 @@ T.No=120:220; %worked for 10 seconds
 
 time=T.High;
 data_current=dataHigh;
-for i=1:1:11
+for i=11:-1:1
     %z and y best
     av_speed(i)=mean(data_current(i).LF.Comp_RPM(time));
     av_pressure(i)=mean(data_current(i).LF.Compressor_Discharge_Pressure(time));
     av_I(i)=mean(data_current(i).LF.VFD_Current_Output(time));
     fftdata(i,:)=abs(fft(data_current(i).HF.Accelerometer_Z_Axis(time(1)*fs:time(end)*fs),fs*scale));
-    %fftdata(i,:)=rceps(data_current(i).HF.Accelerometer_Z_Axis(time(1)*fs:time(end)*fs));
-    fftdata(i,1:5)=0;
+    %fftdata(i,:)=abs(fft(data_current(i).HF.Belt_Displacement(time(1)*fs:time(end)*fs),fs*scale));
+    fftdata(i,1:1)=0;
     L=length(fftdata(i,1:end/2));
     f_vec=[1:L]/scale;
     %range=[0.95*scale:1.05*scale]*25;
     x=(f_vec(lowFreq*scale:topFreq*scale));
     %x=(f_vec(lowFreq*scale:topFreq*scale));
     %x=(f_vec(lowFreq*scale:topFreq*scale)*60);
-    fdata=fftdata(i,lowFreq*scale:topFreq*scale);
+    fdata=fftdata(i,lowFreq*scale:topFreq*scale)/(scale*length(time(1)*fs:time(end)*fs));
     %hold off
     
     plot(x,fdata,style{i});
@@ -106,8 +106,8 @@ for i=1:1:11
 end 
 legend(f);
 %
-clf
-plot(1:11,p,'.-')
+%clf
+%plot(1:11,p,'.-')
 
 
 %%

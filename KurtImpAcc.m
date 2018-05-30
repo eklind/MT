@@ -32,10 +32,10 @@ if(N)
 %         kurt=kurt-3;
         kurt=kurt.^2; %square the difference
     else
-        kurt=0;
+        kurt=-1;
     end
 else
-    kurt=0;
+    kurt=-1;
 end
 
 if max(kurt) > 3

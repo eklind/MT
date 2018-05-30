@@ -1,4 +1,4 @@
-function [kurt, start_time, e] = KurtImpAcc(t,compStatus, disP, accz)
+function [cond,kurt, start_time, e] = KurtImpAcc(t,compStatus, disP, accz)
 %Takes HF time, compressor status and compressor discharege pressure and accelerometer data
 % and calculates the kurtosis value of the impulse response. 
 % Assumes fs=1Hz for disharge pressure
@@ -38,6 +38,17 @@ else
     kurt=0;
 end
 
+if max(kurt) > 3
+       cond = 3;
+elseif mean(kurt)>=1
+       cond = 2;
+elseif (1>=mean(kurt))&&(mean(kurt)>=0.5)
+       cond = 1;
+    elseif mean(kurt)<0.5
+       cond=0;
+else
+    cond = -1;
+end
 
 end
 

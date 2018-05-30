@@ -15,6 +15,6 @@ if(isempty(Comp_RPM)||isempty(Drive_RPM))
 else
     ratio=Comp_RPM./Drive_RPM; 
 end
-tension=ratio*144.7+10000*(ratio-1.244);
+tension=ratio*144.7+10000*(ratio-1.244); %deviation from normal tension
     score=median(tension);
 end

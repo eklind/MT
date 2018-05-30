@@ -111,7 +111,7 @@ for i=1:numbers
          Score.Slip(i)=Slip_Detection_RPM(struct.LF.Drive_RPM(t_LF(i,1):t_LF(i,2)),...
              struct.LF.Comp_RPM(t_LF(i,1):t_LF(i,2))); 
          
-         formatSpec = 'Temp diff in drive belt %4.4f \n';
+         formatSpec = 'Slip from RPM %4.4f \n';
          fprintf(fileID,formatSpec,Score.Slip(i));
     catch 
         formatSpec='Error in slip RPM \n';

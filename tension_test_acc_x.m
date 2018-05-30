@@ -1,8 +1,8 @@
 %tension_est_acc_x
 
 %% Import all files in map
-search_path="C:\Users\jonat\Documents\Thesis\MT\HighLoad\*.tdms";
-folder_path = "C:\Users\jonat\Documents\Thesis\MT\HighLoad\";
+search_path="C:\Users\jonat\Documents\Thesis\MT\NoLoad\*.tdms";
+folder_path = "C:\Users\jonat\Documents\Thesis\MT\NoLoad\";
 d=dir(search_path);
 Nd = length(d);
 clearvars data;
@@ -20,8 +20,8 @@ fs=2500;
 scale=100;
 fftdata=[];
 
-topFreq=1200;
-lowFreq=1;
+topFreq=10;
+lowFreq=0;
 
 %topFreq=19.8; %nothing
 %lowFreq=19.4;
@@ -59,8 +59,8 @@ T.High=340:400;
 T.Low=160:220;
 T.No=120:220; %worked for 10 seconds
 
-time=T.High;
-data_current=dataHigh;
+time=T.No;
+data_current=dataNo;
 for i=11:-1:1
     %z and y best
     av_speed(i)=mean(data_current(i).LF.Comp_RPM(time));
@@ -72,10 +72,10 @@ for i=11:-1:1
     L=length(fftdata(i,1:end/2));
     f_vec=[1:L]/scale;
     %range=[0.95*scale:1.05*scale]*25;
-    x=(f_vec(lowFreq*scale:topFreq*scale));
+    x=(f_vec(lowFreq*scale+1:topFreq*scale));
     %x=(f_vec(lowFreq*scale:topFreq*scale));
     %x=(f_vec(lowFreq*scale:topFreq*scale)*60);
-    fdata=fftdata(i,lowFreq*scale:topFreq*scale)/(scale*length(time(1)*fs:time(end)*fs));
+    fdata=fftdata(i,lowFreq*scale+1:topFreq*scale)/(scale*length(time(1)*fs:time(end)*fs));
     %hold off
     
     plot(x,fdata,style{i});

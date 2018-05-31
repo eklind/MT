@@ -9,6 +9,8 @@ fftdata=[];
     f_range=[f_center-0.5 f_center+0.5];
     n_peaks=2;
     
+    %Accelerometer_Z_Axis=Accelerometer_Z_Axis(Find_Longest_SS(Accelerometer_Z_Axis,20));
+    
     peak=zeros(2,2);
     fftdata=abs(fft(Accelerometer_Z_Axis(1:end),fs*scale));
     %fftdata(i,1:5)=0;
@@ -32,7 +34,11 @@ fftdata=[];
             fdata(I_temp-remove:I_temp+remove)=0;
         end
     end
-     
-    score_vec=(abs(peak(1,2)./peak(1,1)));
+        score_vec=(abs(peak(1,2)-peak(1,1)));
+%      if (peak(1,2)>peak(1,1))
+%         score_vec=(abs(peak(1,2)./peak(1,1)));
+%      else
+%          score_vec=(abs(peak(1,1)./peak(1,2)));
+%      end
 end
 

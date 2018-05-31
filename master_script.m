@@ -1,4 +1,4 @@
-function master_script(struct,window)
+function Score= master_script(struct,window)
 
 %-------input data----------
 % Time (sec)
@@ -56,6 +56,7 @@ end
         formatSpec='Error in temp diff drive \n';
         fprintf(fileID,formatSpec);
      end
+%Slip in Temperature
     try
      Score.Temp_diff_comp=Slip_Detection_Temperature(struct.LF.Compressor_Belt_Temp,...
          struct.LF.Comp_Status,30,1);
@@ -66,7 +67,7 @@ end
         fprintf(fileID,formatSpec);
     end
     
-    %detecting decrease in rpm when load is added
+%detecting decrease in rpm when load is added
     try
      Score.Pinch= Pinch_Detection(struct.LF.Drive_RPM,...
          struct.LF.Comp_Status,...
@@ -78,8 +79,20 @@ end
         formatSpec='Error in pinch \n';
         fprintf(fileID,formatSpec);
     end
+ 
+ %reduction in rpm in compressor event
+     try
+     Score.RPM_Loss=RPM_Loss(struct.LF.Comp_RPM,...
+         struct.LF.Comp_Status,5);
+     
+         formatSpec = 'Temp diff in rpm loss: %4.4f \n';
+         fprintf(fileID,formatSpec,Score.RPM_Loss);
+    catch 
+        formatSpec='Error in rpm loss \n';
+        fprintf(fileID,formatSpec);
+     end
     
-    %Kurtosis when load is added
+%Kurtosis when load is added
     try
      Score.Kurtosis= KurtImpAcc(struct.HF.Time__sec_,...
          struct.LF.Comp_Status,...
@@ -118,11 +131,11 @@ for i=1:numbers
         fprintf(fileID,formatSpec);
     end
     
-    %frequency relationship from accelerometer z
+    %Frequency relationship from accelerometer z
     try
-        %Score.Acc_Freq(i)=median(Belt_Tension_Frequency(struct.HF.Accelerometer_Z_Axis(t_HF(i,1):t_HF(i,2)),...
-        Score.Acc_Freq(i)=mean(Frequency_Ratio(struct.HF.Accelerometer_Z_Axis(t_HF(i,1):t_HF(i,2)),...
-        struct.LF.Drive_RPM(t_LF(i,1):t_LF(i,2)),2500,100,15));
+        Score.Acc_Freq(i)=Belt_Tension_Frequency(struct.HF.Accelerometer_Z_Axis(t_HF(i,1):t_HF(i,2)),...
+        struct.LF.Comp_RPM(t_LF(i,1):t_LF(i,2)),2500,100,30);
+       %Score.Acc_Freq(i)=Frequency_Ratio(struct.HF.Accelerometer_Z_Axis(t_HF(i,1):t_HF(i,2)),...
     
         formatSpec='RPM difference is %4.2f \n';
         fprintf(fileID,formatSpec,Score.Acc_Freq(i));
@@ -164,89 +177,71 @@ for i=1:numbers
     fprintf(fileID,formatSpec);
        
     
-
-    
 end
 %------------ debugging/plotting results-------------------
 
-%     ScorePlot=[sum(Score.Temp_Diff_drive) sum(Score.Temp_diff_comp) median(Score.Acc_Freq) ...
-%         max(Score.Kurtosis)/10 sum(Score.Pinch) sum(Score.Slip)];
-%         plot(ScorePlot);
-%     hold on
-    
-%     plot(1,sum(Score.Temp_Diff_drive),'*')
-%     hold on
-%     plot(2,sum(Score.Temp_diff_comp),'*')
-%     plot(3,median(Score.Acc_Freq),'*')
-%     plot(4,max(Score.Kurtosis),'*')
-%     plot(5,sum(Score.Pinch),'*')
-%     plot(6,sum(Score.Slip),'*')
-    
-    
-%     subplot(4,3,11)  
-%     hold on
-%     title('Belt.Temperature')
-%     plot(Warning.Comp_Belt_Temperature,'*-')
-%     plot(Warning.Drive_Belt_Temperature,'*-')
-%     ylabel('Life Reduction')
-%     xlabel('Sequence')
-%     ylim([0 1])
-    
-subplot(4,3,1)
+    subplot(1,12,1)
     hold on
-    title('Temperature diff in drive belt')
-    ylabel('dtemp')
-    plot( Score.Temp_Diff_drive,'*-')
+    ylabel('slip\_RPM(tension)')
+    plot(Score.Slip,'*-')
     
-    subplot(4,3,2)
+    subplot(1,12,2)
     hold on
-    title('Temperature diff in comp belt')
-    ylabel('dtemp')
-    plot(Score.Temp_diff_comp,'*-')
-
-    subplot(4,3,4)
-    hold on
-    title('Tension.Freq')
-    ylabel('Ratio')
+    ylabel('Tension Frequency Ratio')
     plot(Score.Acc_Freq,'*-')
     
-    subplot(4,3,7)
+    subplot(1,12,4)
     hold on
-    title('Kurtosis')
+    ylabel('Temperature diff in drive belt')
+    plot( median(Score.Temp_Diff_drive),'*-')
+    
+    subplot(1,12,5)
+    hold on
+    ylabel('Temperature diff in comp belt')
+    plot(mean(Score.Temp_diff_comp),'*-')
+
+
+    
+    subplot(1,12,6)
+    hold on
     try
         plot(Score.Kurtosis,'*-')
     catch
     end
     ylabel('Kurtosis')
     
-    subplot(4,3,8)
+    subplot(1,12,7)
     hold on
-    title('Pinch')
     try
-        plot(Score.Pinch,'*-')
+        plot(mean(Score.Pinch),'*-')
     catch
     end
     ylabel('Pinch')
     
-    subplot(4,3,10)
+    subplot(1,12,8)
     hold on
-    title('Drive\_Belt.Temperature')
+    try
+        plot(Score.RPM_Loss,'*-')
+    catch
+    end
+    ylabel('RPM\_Loss')
+    
+    
+    
+    subplot(1,12,11)
+    hold on
     plot(Warning.Drive_Belt_Temperature,'*-')
-    ylabel('Life Reduction')
+    ylabel('Life Reduction Drive Belt')
     ylim([0 1])
     
-    subplot(4,3,11)  
+    subplot(1,12,12)  
     hold on
-    title('Comp\_Belt.Temperature')
     plot(Warning.Comp_Belt_Temperature,'*-')
-    ylabel('Life Reduction')
+    ylabel('Life Reduction Compressor Belt')
     xlabel('Sequence')
     ylim([0 1])
     
-    subplot(4,3,12)
-    hold on
-    title('slip\_RPM')
-    plot(Score.Slip,'*-')
+
 
 fclose(fileID);
 end

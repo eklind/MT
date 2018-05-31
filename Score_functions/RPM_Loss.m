@@ -6,8 +6,7 @@ function score=RPM_Loss(Comp_RPM,Comp_Status,time)
     diff_data2=[];
     diff_data3=[];
     for event=2:nr_events
-        compSwitch=Comp_Status(:,event)
-
+        compSwitch=Comp_Status(:,event);
             %def
             start_time=(compSwitch(2));
             

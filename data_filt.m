@@ -14,8 +14,8 @@ o_w=5; %outlier window
 
 % Butterworth low-pass filter for accelerometer
 
-% wc_butt = 250/(0.5*fs); %cut-off at 250hz
-% [B_butt,A_butt] = butter(9,wc_butt,'low'); 
+wc_butt = 500/(0.5*fs); %cut-off at 250hz
+[B_butt,A_butt] = butter(9,wc_butt,'low'); 
 
 %===============================================================    
 
@@ -75,6 +75,6 @@ o_w=5; %outlier window
 %     filtered_struct.HF.Accelerometer_X_Axis=filtfilt(B_butt,A_butt,input_struct.HF.Accelerometer_X_Axis);
 %     %Y
 %     filtered_struct.HF.Accelerometer_Y_Axis=filtfilt(B_butt,A_butt,input_struct.HF.Accelerometer_Y_Axis);
-%     %Z
+    %Z
 %     filtered_struct.HF.Accelerometer_Z_Axis=filtfilt(B_butt,A_butt,input_struct.HF.Accelerometer_Z_Axis);
 end

@@ -76,6 +76,12 @@ end
      end
      LF.Time__sec_=LF.Time__sec_-LF.Time__sec_(1);
      
+     % A dirty (but the only) way to take care of 10hz data.  
+     if (datestr(LF.Time(1),'mm')>=6)
+         LF.Time__sec_=LF.Time__sec_./10;
+         LF.low_freq = 10;
+     end
+     
      for j=3:length(hf_data_struct(:,1))
         name = hf_data_struct{j}.name;
         HF = setfield(HF,name,hf_data_struct{j}.data);

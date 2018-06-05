@@ -6,7 +6,7 @@ fftdata=[];
 %finds the relationships between frequency peaks in a frequency interval 
 
     f_center=mean(rpm)/60;
-    f_range=[f_center-0.5 f_center+0.5];
+    f_range=[f_center-2 f_center+2];
     n_peaks=2;
     
     %Accelerometer_Z_Axis=Accelerometer_Z_Axis(Find_Longest_SS(Accelerometer_Z_Axis,20));
@@ -34,11 +34,11 @@ fftdata=[];
             fdata(I_temp-remove:I_temp+remove)=0;
         end
     end
-        score_vec=(abs(peak(1,2)-peak(1,1)));
-%      if (peak(1,2)>peak(1,1))
-%         score_vec=(abs(peak(1,2)./peak(1,1)));
-%      else
-%          score_vec=(abs(peak(1,1)./peak(1,2)));
-%      end
+        %score_vec=(abs(peak(1,2)./peak(1,1)));
+     if (peak(1,2)>peak(1,1))
+        score_vec=(abs(peak(1,2)./peak(1,1)));
+     else
+         score_vec=(abs(peak(1,1)./peak(1,2)));
+     end
 end
 

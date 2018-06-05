@@ -1,4 +1,4 @@
-function Score= master_script(struct,window)
+function [Score,Warning]= master_script(struct,window)
 
 %-------input data----------
 % Time (sec)
@@ -133,11 +133,12 @@ for i=1:numbers
     
     %Frequency relationship from accelerometer z
     try
+        
         Score.Acc_Freq(i)=Belt_Tension_Frequency(struct.HF.Accelerometer_Z_Axis(t_HF(i,1):t_HF(i,2)),...
-        struct.LF.Comp_RPM(t_LF(i,1):t_LF(i,2)),2500,100,30);
+        struct.LF.Drive_RPM(t_LF(i,1):t_LF(i,2)),2500,100,30);
        %Score.Acc_Freq(i)=Frequency_Ratio(struct.HF.Accelerometer_Z_Axis(t_HF(i,1):t_HF(i,2)),...
     
-        formatSpec='RPM difference is %4.2f \n';
+        formatSpec='RPM difference is %4.4f \n';
         fprintf(fileID,formatSpec,Score.Acc_Freq(i));
     catch
         formatSpec='Error in Acc_Freq \n';
@@ -171,6 +172,17 @@ for i=1:numbers
         formatSpec='Error in comp belt temp warning';
         fprintf(fileID,formatSpec);
     end
+    
+      %warn for high pulley temperature
+    try
+        Warning.Pulley_Surface_Temp(i)=belt_life_est(struct.LF.Pulley_Surface_Temp(t_LF(i,1):t_LF(i,2)));
+        
+        formatSpec='Loss of drive belt life is %4.2f\n';
+        fprintf(fileID,formatSpec,Warning.Pulley_Surface_Temp(i));
+    catch
+        formatSpec='Error in comp belt temp warning';
+        fprintf(fileID,formatSpec);
+    end
 
     % Close log sequence
     formatSpec='/------End------/ \n\n';
@@ -183,17 +195,17 @@ end
     subplot(1,12,1)
     hold on
     ylabel('slip\_RPM(tension)')
-    plot(Score.Slip,'*-')
+    plot(median(Score.Slip),'*-')
     
     subplot(1,12,2)
     hold on
-    ylabel('Tension Frequency Ratio')
-    plot(Score.Acc_Freq,'*-')
+    ylabel('Tension Frequency Ratio') %note scaling
+    plot(median(Score.Acc_Freq),'*-')          
     
     subplot(1,12,4)
     hold on
     ylabel('Temperature diff in drive belt')
-    plot( median(Score.Temp_Diff_drive),'*-')
+    plot(median(Score.Temp_Diff_drive),'*-')
     
     subplot(1,12,5)
     hold on
@@ -221,12 +233,16 @@ end
     subplot(1,12,8)
     hold on
     try
-        plot(Score.RPM_Loss,'*-')
+        plot(median(Score.RPM_Loss),'*-')
     catch
     end
     ylabel('RPM\_Loss')
     
-    
+    subplot(1,12,10)
+    hold on
+    plot(Warning.Pulley_Surface_Temp,'*-')
+    ylabel('Life Reduction Drive Belt')
+    ylim([0 1])    
     
     subplot(1,12,11)
     hold on
@@ -237,7 +253,7 @@ end
     subplot(1,12,12)  
     hold on
     plot(Warning.Comp_Belt_Temperature,'*-')
-    ylabel('Life Reduction Compressor Belt')
+    ylabel('Life Reduction of pulley bearings')
     xlabel('Sequence')
     ylim([0 1])
     

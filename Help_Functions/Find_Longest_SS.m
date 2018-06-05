@@ -1,7 +1,9 @@
 function SS_index=Find_Longest_SS(data,factor)
 %checks when speed and Discharge pressure is semi-constant
 
-%Input: struct, factor is how much it can differ
+%Input: struct, factor is how much it can differ, number is how many that
+%needs to be the same
+
 L=length(data);
 
 max_index_start=0;
@@ -10,8 +12,11 @@ current_index_start=0;
 current_index_stop=0;
 started_sequence=false;
 
-diff_data=diff(smooth(data,20)); %extra smoothing
-is_SS=abs(diff_data)<factor;
+is_SS1=abs(diff(smooth(data,3))')<factor;
+is_SS2=abs(diff(smooth(data,3))')<2*factor;
+is_SS3=abs(diff(smooth(data,3))')<3*factor;
+is_SS4=abs(diff(smooth(data,3))')<4*factor;
+is_SS5=abs(diff(smooth(data,3))')<5*factor;
 
 
 for i=1:length(is_SS)

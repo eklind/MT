@@ -1,14 +1,13 @@
-function score_vec= Frequency_Ratio(Accelerometer_Z_Axis,rpm,fs,scale,remove)
+function score_vec= Frequency_Ratio(Accelerometer_Z_Axis,drive_rpm,comp_rpm,fs,scale,remove)
 %fs=2500;
 %scale=100;
 fftdata=[];
 
 %finds the relationships between frequency peaks in a frequency interval 
 
-    f_drive=mean(rpm)/60;
-    f_center=94;
-    f_range=[f_center-0.5 f_center+0.5];
-    n_peaks=2;
+    f_center=mean(drive_rpm)/60;
+    f_range=[f_center-2 f_center+2];
+    n_peaks=1;
     
     peak=zeros(2,1);
     fftdata=abs(fft(Accelerometer_Z_Axis(1:end),fs*scale));

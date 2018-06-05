@@ -15,12 +15,12 @@ plot(driverpm*1.25)
 
 %% compressor
 Td=1;
-A=[1 Td; 0 0];
+A=[1 Td; 0 1];
 H=[1 0];
 Q=0.02;
 R=1;
 x_0=[0;0];
-fac_drive=cov(comprpm(100:170));
+fac_drive=cov(comprpm(1:20));
 P_0=fac_drive*eye(2);
 
 [Xcomp,Pcomp]=kalmanFilter(comprpm,x_0,P_0,A,Q,H,R);
@@ -35,7 +35,7 @@ H=[1 0 0];
 Q=0.02*eye(3);
 R=1*eye(1);
 x_0=[0;0;0];
-fac_comp=cov(driverpm(100:170));
+fac_comp=cov(driverpm(1:20));
 P_0=fac_comp*eye(3);
 [Xdrive,Pdrive]=kalmanFilter(driverpm,x_0,P_0,A,Q,H,R);
 
@@ -44,7 +44,7 @@ P_0=fac_comp*eye(3);
 hold on
 
 plot(Xcomp(1,:),'b--','Linewidth',2)
-plot(movmean(comprpm,20),'b.-')
+plot(movmean(comprpm,5),'b.-')
 plot(comprpm,'b-','Linewidth',1)
 
 %plot(driverpm*1.25,'b-','Linewidth',1)

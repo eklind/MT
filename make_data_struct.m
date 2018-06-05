@@ -65,8 +65,9 @@ end
      hf_data_struct = hf_data_struct{3}; 
      hf_data_struct = struct2cell(hf_data_struct);
      
-     low_freq = 1/mean(diff(tdms_data.g_1Hz_Data.Time__sec_.data));
+     low_freq = tdms_data.Test_Configuration.Sample_Rate.data;
      high_freq = 1/mean(diff(hf_data_struct{3}.data));
+
      
      LF = struct('Sampling_Rate_Hz',low_freq);
      HF = struct('Sampling_Rate_Hz',high_freq);
@@ -76,10 +77,9 @@ end
      end
      LF.Time__sec_=LF.Time__sec_-LF.Time__sec_(1);
      
-     % A dirty (but the only) way to take care of 10hz data.  
-     if (str2num(datestr(LF.Time(1),'mm'))>=6)
+     % A dirty way to take care of 10hz data time vector.  
+     if (low_freq == 10)
          LF.Time__sec_=LF.Time__sec_./10;
-         LF.low_freq = 10;
      end
      
      for j=3:length(hf_data_struct(:,1))

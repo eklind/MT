@@ -11,16 +11,16 @@ else
 end
 
 %Reshape
-data=reshape(data,[length(data)/window_size window_size]);
+data=reshape(data,[window_size length(data)/window_size]);
 
 %Calculate
-metric_struct.mean=mean(data,2); %first moment of shunks
-metric_struct.var=var(data,0,2); %second moment of shunks
-metric_struct.skew=skewness(data,0,2); %third moment of shunks
-metric_struct.kurtosis=kurtosis(data,0,2); %fourth moment of shunks
+metric_struct.mean=mean(data,1); %first moment of shunks
+metric_struct.var=var(data,0,1); %second moment of shunks
+metric_struct.skew=skewness(data,0,1); %third moment of shunks
+metric_struct.kurtosis=kurtosis(data,0,1); %fourth moment of shunks
 
-E=sum(data.^2,2);
+E=sum(data.^2,1);
 metric_struct.power=E/length(data); % Signal power
-metric_struct.rms=rms(data);
+metric_struct.rms=rms(data,1);
 
 end

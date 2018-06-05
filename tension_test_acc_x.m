@@ -17,10 +17,10 @@ end
 f={'t1','t2','t3','t4','t5','t6','t7','t8','t9','t10','t11'};
 style={'.-','.-','.-','.-','.-','*-','*-','*-','*-','*-','*-'};
 fs=2500;
-scale=100;
+scale=1000;
 fftdata=[];
 
-topFreq=10;
+topFreq=15;
 lowFreq=0;
 
 %topFreq=19.8; %nothing
@@ -36,7 +36,7 @@ lowFreq=0;
 %lowFreq=9;
 %topFreq=25; %decreasing with lower tension(comp)
 %lowFreq=24;
-%topFreq=20.5; %decreasing with lower tension(mot)
+%topFreq=21; %decreasing with lower tension(mot)
 %lowFreq=19;
 %topFreq=60;
 %lowFreq=58;
@@ -61,8 +61,9 @@ T.No=120:220; %worked for 10 seconds
 
 time=T.No;
 data_current=dataNo;
-for i=11:-1:1
+for i=1:11
     %z and y best
+    data_current(i).LF.Comp_RPM(time)
     av_speed(i)=mean(data_current(i).LF.Comp_RPM(time));
     av_pressure(i)=mean(data_current(i).LF.Compressor_Discharge_Pressure(time));
     av_I(i)=mean(data_current(i).LF.VFD_Current_Output(time));

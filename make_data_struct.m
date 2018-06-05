@@ -77,7 +77,7 @@ end
      LF.Time__sec_=LF.Time__sec_-LF.Time__sec_(1);
      
      % A dirty (but the only) way to take care of 10hz data.  
-     if (datestr(LF.Time(1),'mm')>=6)
+     if (str2num(datestr(LF.Time(1),'mm'))>=6)
          LF.Time__sec_=LF.Time__sec_./10;
          LF.low_freq = 10;
      end

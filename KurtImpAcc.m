@@ -30,8 +30,8 @@ if(N)
             start_time(i) = (t1+start_time(i)-b)*fs;
             impAcc(:,(i)) = accz(start_time(i):(start_time(i)+e));
 %             normAcc(:,(i)) = accz((start_time(i)-10*fs):(start_time(i)+e-10*fs));
-            Lth_mom = lmom(impAcc(:,i),4);
-            L_kurt(i) = Lth_mom(4)./Lth_mom(2);
+%             Lth_mom = lmom(impAcc(:,i),4);
+            L_kurt(i) = -1;
         end
         kurt = kurtosis(impAcc); %[1xN]
         impuls_factor = max(abs(impAcc))./mean(abs(impAcc));

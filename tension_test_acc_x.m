@@ -1,8 +1,8 @@
 %tension_est_acc_x
 
 %% Import all files in map
-search_path="C:\Users\jonat\Documents\Thesis\MT\NoLoad\*.tdms";
-folder_path = "C:\Users\jonat\Documents\Thesis\MT\NoLoad\";
+search_path="C:\Users\jonat\Documents\Thesis\MT\onoff\*.tdms";
+folder_path = "C:\Users\jonat\Documents\Thesis\MT\onoff\";
 d=dir(search_path);
 Nd = length(d);
 clearvars data;

@@ -2,12 +2,12 @@ function score =Slip_Detection_RPM(Drive_RPM,Comp_RPM)
 %Compares the rpm on motor and compressor side
 
 %remove when drive speed is too low
-Drive_RPM=Drive_RPM(Drive_RPM>750);
-Comp_RPM=Comp_RPM(Drive_RPM>750);
+%Drive_RPM=Drive_RPM(Drive_RPM~=0);
+%Comp_RPM=Comp_RPM(Drive_RPM~=0);
 
 %remove when compressor speed is too low
-Drive_RPM=Drive_RPM(Comp_RPM>500);
-Comp_RPM=Comp_RPM(Comp_RPM>500);
+%Drive_RPM=Drive_RPM(Comp_RPM~=0);
+%Comp_RPM=Comp_RPM(Comp_RPM~=0);
 
 if(isempty(Comp_RPM)||isempty(Drive_RPM))
     ratio=1; 

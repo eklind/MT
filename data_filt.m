@@ -20,12 +20,12 @@ wc_butt = 500/(0.5*fs); %cut-off at 250hz
 %===============================================================    
 
     %change filter values dependent on sample rate
-    if(input_struct.LF.Sample_Rate_Hz==1)
-        hampel_comp=5
-        movmean_comp=5
+    if(input_struct.LF.Sampling_Rate_Hz==1)
+        hampel_comp=5;
+        movmean_comp=5;
     else
-        hampel_comp=5
-        movmean_comp=10
+        hampel_comp=5;
+        movmean_comp=10;
     end
 
     % ==== Filter RPM signals ===================
@@ -49,9 +49,9 @@ wc_butt = 500/(0.5*fs); %cut-off at 250hz
     
     %belt system
     %removes outlier and then moving average
-    filtered_struct.LF.Compressor_Belt_Temp=movmean(hampel(input_struct.LF.Compressor_Belt_Temp,5),5);
-    filtered_struct.LF.Pulley_Surface_Temp=movmean(hampel(input_struct.LF.Pulley_Surface_Temp,5),5);
-    filtered_struct.LF.Drive_Belt_Surface_Temp=movmean(hampel(input_struct.LF.Drive_Belt_Surface_Temp,5),5);
+    filtered_struct.LF.Compressor_Belt_Temp=movmean(hampel(input_struct.LF.Compressor_Belt_Temp,5),2);
+    filtered_struct.LF.Pulley_Surface_Temp=movmean(hampel(input_struct.LF.Pulley_Surface_Temp,5),2);
+    filtered_struct.LF.Drive_Belt_Surface_Temp=movmean(hampel(input_struct.LF.Drive_Belt_Surface_Temp,5),2);
     
     %Air temps
     %removes outlier and then moving average

@@ -31,7 +31,17 @@ t_HF=Make_Time_Vector(struct,2500,window);
 t_LF=Make_Time_Vector(struct,1,window);
 numbers=size(t_LF,1);
 
-
+% 
+Total_Score=0;
+slip_score =0;
+acc_freq_score =0;
+% ========= Define Limits =========
+        T_diff_drive=1;
+        T_diff_comp=1;
+        Pinch_lim=1.23;
+        RPM_loss_lim=0.98;
+        Slip_lim=0.98;
+        acc_freq_lim=1;
 
 %write to log file
 fileID = fopen('logfile.txt','w');
@@ -46,26 +56,26 @@ else
 end
 
 %Slip in Temperature
-     try
+%      try
      Score.Temp_Diff_drive=Slip_Detection_Temperature(struct.LF.Drive_Belt_Surface_Temp,...
          struct.LF.Comp_Status,30,1);
      
          formatSpec = 'Temp diff in drive belt: %4.4f \n';
          fprintf(fileID,formatSpec,Score.Temp_Diff_drive);
-    catch 
-        formatSpec='Error in temp diff drive \n';
-        fprintf(fileID,formatSpec);
-     end
+%     catch 
+%         formatSpec='Error in temp diff drive \n';
+%         fprintf(fileID,formatSpec);
+%      end
 %Slip in Temperature
-    try
+%     try
      Score.Temp_diff_comp=Slip_Detection_Temperature(struct.LF.Compressor_Belt_Temp,...
          struct.LF.Comp_Status,30,1);
         formatSpec = 'Temp diff in compressor belt: %4.4f \n';
         fprintf(fileID,formatSpec,Score.Temp_diff_comp);
-    catch 
-        formatSpec='Error in temp diff comp \n';
-        fprintf(fileID,formatSpec);
-    end
+%     catch 
+%         formatSpec='Error in temp diff comp \n';
+%         fprintf(fileID,formatSpec);
+%     end
     
 %detecting decrease in rpm when load is added
     try
@@ -81,20 +91,20 @@ end
     end
  
  %reduction in rpm in compressor event
-     try
+%      try
      Score.RPM_Loss=RPM_Loss(struct.LF.Comp_RPM,...
          struct.LF.Compressor_Discharge_Pressure,struct.LF.Comp_Status,5,3,...
-         struct.LF.Samlping_Rate);
+         struct.LF.Sampling_Rate_Hz);
      
          formatSpec = 'Temp diff in rpm loss: %4.4f \n';
          fprintf(fileID,formatSpec,Score.RPM_Loss);
-    catch 
-        formatSpec='Error in rpm loss \n';
-        fprintf(fileID,formatSpec);
-     end
+%     catch 
+%         formatSpec='Error in rpm loss \n';
+%         fprintf(fileID,formatSpec);
+%      end
     
 %Kurtosis when load is added
-    try
+%     try
      [~,~,~,~,~,Score.Kurtosis]= KurtImpAcc(struct.HF.Time__sec_,...
          struct.LF.Comp_Status,...
          struct.LF.Compressor_Discharge_Pressure,...
@@ -102,10 +112,10 @@ end
      
         formatSpec='Kurtosis is %4.2f \n';
         fprintf(fileID,formatSpec,Score.Kurtosis);
-     catch 
-         formatSpec='Error in Kurtosis \n';
-         fprintf(fileID,formatSpec);
-    end
+%      catch 
+%          formatSpec='Error in Kurtosis \n';
+%          fprintf(fileID,formatSpec);
+%     end
     
 for i=1:numbers
     %For every partition, call all functions for prediction
@@ -121,19 +131,19 @@ for i=1:numbers
      
      
     %Slip from RPM
-     try
+%      try
          Score.Slip(:,i)=Slip_Detection_RPM(struct.LF.Drive_RPM(t_LF(i,1):t_LF(i,2)),...
              struct.LF.Comp_RPM(t_LF(i,1):t_LF(i,2))); 
          
          formatSpec = 'Slip from RPM %4.4f \n';
          fprintf(fileID,formatSpec,Score.Slip(i));
-    catch 
-        formatSpec='Error in slip RPM \n';
-        fprintf(fileID,formatSpec);
-    end
+%     catch 
+%         formatSpec='Error in slip RPM \n';
+%         fprintf(fileID,formatSpec);
+%     end
     
     %Frequency relationship from accelerometer z
-    try
+%     try
         
         Score.Acc_Freq(i)=Belt_Tension_Frequency(struct.HF.Accelerometer_Z_Axis(t_HF(i,1):t_HF(i,2)),...
         struct.LF.Drive_RPM(t_LF(i,1):t_LF(i,2)),2500,100,30);
@@ -141,10 +151,15 @@ for i=1:numbers
     
         formatSpec='RPM difference is %4.4f \n';
         fprintf(fileID,formatSpec,Score.Acc_Freq(i));
-    catch
-        formatSpec='Error in Acc_Freq \n';
-        fprintf(fileID,formatSpec);
-    end
+%     catch
+%         formatSpec='Error in Acc_Freq \n';
+%         fprintf(fileID,formatSpec);
+%     end
+    
+    % ========Check hard limits and assign points =========================
+   
+    slip_score = slip_score +( min(Score.Slip(:,i))>=Slip_lim);
+    acc_freq_score = acc_freq_score + (Score.Acc_Freq(i) >= acc_freq_lim);
     
     
 
@@ -153,37 +168,37 @@ for i=1:numbers
     %/////////////////////////////////
     
     %warn for high drive belt temperature
-    try
+%     try
         Warning.Drive_Belt_Temperature(i)=belt_life_est(struct.LF.Drive_Belt_Surface_Temp(t_LF(i,1):t_LF(i,2)));
         
         formatSpec='Loss of drive belt life is %4.2f \n';
         fprintf(fileID,formatSpec,Warning.Drive_Belt_Temperature(i));
-    catch
-        formatSpec='Error in drive belt temp warning \n';
-        fprintf(fileID,formatSpec);
-    end
+%     catch
+%         formatSpec='Error in drive belt temp warning \n';
+%         fprintf(fileID,formatSpec);
+%     end
     
     %warn for high compressor belt temperature
-    try
+%     try
         Warning.Comp_Belt_Temperature(i)=belt_life_est(struct.LF.Compressor_Belt_Temp(t_LF(i,1):t_LF(i,2)));
         
         formatSpec='Loss of drive belt life is %4.2f\n';
         fprintf(fileID,formatSpec,Warning.Comp_Belt_Temperature(i));
-    catch
-        formatSpec='Error in comp belt temp warning';
-        fprintf(fileID,formatSpec);
-    end
+%     catch
+%         formatSpec='Error in comp belt temp warning';
+%         fprintf(fileID,formatSpec);
+%     end
     
       %warn for high pulley temperature
-    try
+%     try
         Warning.Pulley_Surface_Temp(i)=belt_life_est(struct.LF.Pulley_Surface_Temp(t_LF(i,1):t_LF(i,2)));
         
         formatSpec='Loss of drive belt life is %4.2f\n';
         fprintf(fileID,formatSpec,Warning.Pulley_Surface_Temp(i));
-    catch
-        formatSpec='Error in comp belt temp warning';
-        fprintf(fileID,formatSpec);
-    end
+%     catch
+%         formatSpec='Error in comp belt temp warning';
+%         fprintf(fileID,formatSpec);
+%     end
 
     % Close log sequence
     formatSpec='/------End------/ \n\n';
@@ -191,8 +206,21 @@ for i=1:numbers
        
     
 end
-%------------ debugging/plotting results-------------------
+ 
+    
+    Limits=[T_diff_drive; T_diff_comp;Pinch_lim;RPM_loss_lim];
+    Calculated_val=[nanmedian(Score.Temp_Diff_drive); nanmedian(Score.Temp_diff_comp);
+        min(Score.Pinch); min(Score.RPM_Loss)];      
+    % Test Limits
+   Limit_compare=Calculated_val <= Limits;
+   %Sum Scores
+   partial_score = sum(Limit_compare) + (slip_score+acc_freq_score)/numbers;
+   Total_Score = Total_Score + partial_score + Score.Kurtosis*(Score.Kurtosis>=0);
 
+%------------ debugging/plotting results-------------------
+    disp(Total_Score/numbers)
+    
+    
     subplot(2,5,1)
     hold on
     ylabel('slip\_RPM(tension)')
@@ -217,26 +245,26 @@ end
     
     subplot(2,5,5)
     hold on
-    try
+%     try
         plot(Score.Kurtosis,'*-')
-    catch
-    end
+%     catch
+%     end
     ylabel('Kurtosis')
     
     subplot(2,5,6)
     hold on
-    try
+%     try
         plot(Score.Pinch,'*-')
-    catch
-    end
+%     catch
+%     end
     ylabel('Pinch')
     
     subplot(2,5,7)
     hold on
-    try
+%     try
         plot(Score.RPM_Loss,'*-')
-    catch
-    end
+%     catch
+%     end
     ylabel('RPM\_Loss')
     
     subplot(2,5,8)

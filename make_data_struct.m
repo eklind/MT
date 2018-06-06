@@ -86,7 +86,8 @@ end
         name = hf_data_struct{j}.name;
         HF = setfield(HF,name,hf_data_struct{j}.data);
      end
-     
+     % Uggly patch to fix problem with time vector i some cases
+     HF.Time__sec_=HF.Time__sec_(1:length(HF.Accelerometer_X_Axis));
     
     
 % === Concatenate the three structs into one ==================== 

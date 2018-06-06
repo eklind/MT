@@ -20,12 +20,12 @@ wc_butt = 500/(0.5*fs); %cut-off at 250hz
 %===============================================================    
 
     %change filter values dependent on sample rate
-    if(input_struct.LF.Sample_Rate_Hz==1)
-        hampel_comp=5
-        movmean_comp=5
+    if(input_struct.LF.Sampling_Rate_Hz==1)
+        hampel_comp=5;
+        movmean_comp=5;
     else
-        hampel_comp=5
-        movmean_comp=10
+        hampel_comp=5;
+        movmean_comp=10;
     end
 
     % ==== Filter RPM signals ===================

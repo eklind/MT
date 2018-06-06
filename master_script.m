@@ -28,7 +28,7 @@ if(nargin<2)
 end
 
 t_HF=Make_Time_Vector(struct,2500,window);
-t_LF=Make_Time_Vector(struct,1,window);
+t_LF=Make_Time_Vector(struct,struct.LF.Sampling_Rate_Hz,window);
 numbers=size(t_LF,1);
 
 
@@ -133,18 +133,21 @@ for i=1:numbers
     end
     
     %Frequency relationship from accelerometer z
-    try
-        
+    %try
+        t_HF(i,1)
+        t_HF(i,2)
+        t_LF(i,1)
+        t_LF(i,2)
         Score.Acc_Freq(i)=Belt_Tension_Frequency(struct.HF.Accelerometer_Z_Axis(t_HF(i,1):t_HF(i,2)),...
         struct.LF.Drive_RPM(t_LF(i,1):t_LF(i,2)),2500,100,30);
        %Score.Acc_Freq(i)=Frequency_Ratio(struct.HF.Accelerometer_Z_Axis(t_HF(i,1):t_HF(i,2)),...
     
         formatSpec='RPM difference is %4.4f \n';
         fprintf(fileID,formatSpec,Score.Acc_Freq(i));
-    catch
-        formatSpec='Error in Acc_Freq \n';
-        fprintf(fileID,formatSpec);
-    end
+%     catch
+%         formatSpec='Error in Acc_Freq \n';
+%         fprintf(fileID,formatSpec);
+%     end
     
     
 

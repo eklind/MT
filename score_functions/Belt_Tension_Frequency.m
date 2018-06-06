@@ -6,7 +6,7 @@ fftdata=[];
 %finds the relationships between frequency peaks in a frequency interval 
 
     f_center=mean(rpm)/60;
-    f_range=[f_center-2 f_center+2];
+    f_range=[floor(f_center)-2 ceil(f_center)+2];
     n_peaks=2;
     
     %Accelerometer_Z_Axis=Accelerometer_Z_Axis(Find_Longest_SS(Accelerometer_Z_Axis,20));

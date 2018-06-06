@@ -38,11 +38,11 @@ fileID = fopen('logfile.txt','w');
 
 %store number of switches
 if(length(struct.LF.Comp_Status(1,:))>1)
-    compOn=sum(struct.LF.Comp_Status(1,2:end))
-    compOff=length(struct.LF.Comp_Status(1,2:end))-compOn
+    compOn=sum(struct.LF.Comp_Status(1,2:end));
+    compOff=length(struct.LF.Comp_Status(1,2:end))-compOn;
 else
-    compOn=0
-    compOff=0
+    compOn=0;
+    compOff=0;
 end
 
 %Slip in Temperature
@@ -121,7 +121,7 @@ for i=1:numbers
      
     %Slip from RPM
      try
-         Score.Slip(i)=Slip_Detection_RPM(struct.LF.Drive_RPM(t_LF(i,1):t_LF(i,2)),...
+         Score.Slip(:,i)=Slip_Detection_RPM(struct.LF.Drive_RPM(t_LF(i,1):t_LF(i,2)),...
              struct.LF.Comp_RPM(t_LF(i,1):t_LF(i,2))); 
          
          formatSpec = 'Slip from RPM %4.4f \n';
@@ -192,29 +192,29 @@ for i=1:numbers
 end
 %------------ debugging/plotting results-------------------
 
-    subplot(1,12,1)
+    subplot(3,4,1)
     hold on
     ylabel('slip\_RPM(tension)')
-    plot(median(Score.Slip),'*-')
+    plot(median(Score.Slip,2),'*-')
     
-    subplot(1,12,2)
+    subplot(3,4,2)
     hold on
     ylabel('Tension Frequency Ratio') %note scaling
     plot(median(Score.Acc_Freq),'*-')          
     
-    subplot(1,12,4)
+    subplot(3,4,4)
     hold on
     ylabel('Temperature diff in drive belt')
     plot(median(Score.Temp_Diff_drive),'*-')
     
-    subplot(1,12,5)
+    subplot(3,4,5)
     hold on
     ylabel('Temperature diff in comp belt')
     plot(mean(Score.Temp_diff_comp),'*-')
 
 
     
-    subplot(1,12,6)
+    subplot(3,4,6)
     hold on
     try
         plot(Score.Kurtosis,'*-')
@@ -222,7 +222,7 @@ end
     end
     ylabel('Kurtosis')
     
-    subplot(1,12,7)
+    subplot(3,4,7)
     hold on
     try
         plot(mean(Score.Pinch),'*-')
@@ -230,7 +230,7 @@ end
     end
     ylabel('Pinch')
     
-    subplot(1,12,8)
+    subplot(3,4,8)
     hold on
     try
         plot(median(Score.RPM_Loss),'*-')
@@ -238,19 +238,19 @@ end
     end
     ylabel('RPM\_Loss')
     
-    subplot(1,12,10)
+    subplot(3,4,10)
     hold on
     plot(Warning.Pulley_Surface_Temp,'*-')
     ylabel('Life Reduction Drive Belt')
     ylim([0 1])    
     
-    subplot(1,12,11)
+    subplot(3,4,11)
     hold on
     plot(Warning.Drive_Belt_Temperature,'*-')
     ylabel('Life Reduction Drive Belt')
     ylim([0 1])
     
-    subplot(1,12,12)  
+    subplot(3,4,12)  
     hold on
     plot(Warning.Comp_Belt_Temperature,'*-')
     ylabel('Life Reduction of pulley bearings')

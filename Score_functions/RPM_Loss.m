@@ -1,5 +1,6 @@
 function score=RPM_Loss(RPM,Pressure,Comp_Status,av_time,buffer_time,sample_rate)
 % returns the rpm difference on compressor side when the compressor changes
+
 if(nargin<4)
     sample_rate=1;
 end
@@ -23,7 +24,7 @@ end
                 if(0<start_time-av_time &&start_time+buffer_time+av_time<length(RPM))
                     data1=mean(RPM(start_time-av_time:start_time)./Pressure(start_time-av_time:start_time));
                     data2=mean(RPM(start_time+buffer_time:start_time+av_time+buffer_time)./Pressure(start_time+buffer_time:start_time+av_time+buffer_time));
-                     diff_data1=[diff_data1 (data2/data1)]; 
+                    diff_data1=[diff_data1 (data2/data1)]; 
                      
                       % debug
 %                         plot(Comp_RPM);
@@ -38,4 +39,7 @@ end
             end
     end
     score=diff_data1;
+    if(isempty(score))
+        score=0;
+    end
 end

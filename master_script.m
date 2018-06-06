@@ -38,10 +38,10 @@ acc_freq_score =0;
 % ========= Define Limits =========
         T_diff_drive=1;
         T_diff_comp=1;
-        Pinch_lim=1.23;
+        Pinch_lim=1.23; %ok
         RPM_loss_lim=0.98;
         Slip_lim=0.98;
-        acc_freq_lim=1;
+        acc_freq_lim=1.023; %1.022-1.026 lower is lower tension
 
 %write to log file
 fileID = fopen('logfile.txt','w');
@@ -78,17 +78,17 @@ end
 %     end
     
 %detecting decrease in rpm when load is added
-    try
+%     try
      Score.Pinch= Pinch_Detection(struct.LF.Drive_RPM,...
          struct.LF.Comp_Status,...
          struct.LF.Compressor_Discharge_Pressure);
      
         formatSpec='Pinch is %4.2f \n';
         fprintf(fileID,formatSpec,Score.Pinch);
-    catch 
-        formatSpec='Error in pinch \n';
-        fprintf(fileID,formatSpec);
-    end
+%     catch 
+%         formatSpec='Error in pinch \n';
+%         fprintf(fileID,formatSpec);
+%     end
  
  %reduction in rpm in compressor event
 %      try
@@ -218,7 +218,7 @@ end
    Total_Score = Total_Score + partial_score + Score.Kurtosis*(Score.Kurtosis>=0);
 
 %------------ debugging/plotting results-------------------
-    disp(Total_Score/numbers)
+    disp(Total_Score)
     
     
     subplot(2,5,1)

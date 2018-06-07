@@ -10,7 +10,7 @@ number=floor(L/(window*fs)); %chunks
 time_vec=zeros(number,2); %start and stop index for all chunks
 current_index=1;
 for i=1:number %for all chunks
-    if(current_index+window*fs<=L*fs) %full structs
+    if(current_index+window*fs-1<=L*fs) %full structs
         time_vec(i,1)=current_index;
         time_vec(i,2)=current_index+window*fs-1;
         

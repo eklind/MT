@@ -40,7 +40,7 @@ acc_freq_score =0;
         T_diff_comp=1;
         Pinch_lim=1.23; %ok
         RPM_loss_lim=0.98;
-        Slip_lim=0.98;
+        Slip_lim=1.24; %<1.24 is lower tension
         acc_freq_lim=1.023; %1.022-1.026 lower is lower tension
 
 %write to log file
@@ -131,16 +131,16 @@ for i=1:numbers
      
      
     %Slip from RPM
-%      try
+     try
          Score.Slip(:,i)=Slip_Detection_RPM(struct.LF.Drive_RPM(t_LF(i,1):t_LF(i,2)),...
              struct.LF.Comp_RPM(t_LF(i,1):t_LF(i,2))); 
          
          formatSpec = 'Slip from RPM %4.4f \n';
          fprintf(fileID,formatSpec,Score.Slip(i));
-%     catch 
-%         formatSpec='Error in slip RPM \n';
-%         fprintf(fileID,formatSpec);
-%     end
+     catch 
+         formatSpec='Error in slip RPM \n';
+         fprintf(fileID,formatSpec);
+     end
     
     %Frequency relationship from accelerometer z
         Score.Acc_Freq(i)=Belt_Tension_Frequency(struct.HF.Accelerometer_Z_Axis(t_HF(i,1):t_HF(i,2)),...
@@ -234,12 +234,12 @@ end
     subplot(2,5,3)
     hold on
     ylabel('Temperature diff in drive belt')
-    plot(Score.Temp_Diff_drive,'*-')
+    plot(mean(Score.Temp_Diff_drive),'*-')
     
     subplot(2,5,4)
     hold on
     ylabel('Temperature diff in comp belt')
-    plot(Score.Temp_diff_comp,'*-')
+    plot(mean(Score.Temp_diff_comp),'*-')
 
 
     
@@ -254,7 +254,7 @@ end
     subplot(2,5,6)
     hold on
 %     try
-        plot(Score.Pinch,'*-')
+        plot(mean(Score.Pinch),'*-')
 %     catch
 %     end
     ylabel('Pinch')
@@ -262,7 +262,7 @@ end
     subplot(2,5,7)
     hold on
 %     try
-        plot(Score.RPM_Loss,'*-')
+        plot(mean(Score.RPM_Loss),'*-')
 %     catch
 %     end
     ylabel('RPM\_Loss')

@@ -85,5 +85,5 @@ wc_butt = 500/(0.5*fs); %cut-off at 250hz
 %     %Y
 %     filtered_struct.HF.Accelerometer_Y_Axis=filtfilt(B_butt,A_butt,input_struct.HF.Accelerometer_Y_Axis);
     %Z
-%     filtered_struct.HF.Accelerometer_Z_Axis=filtfilt(B_butt,A_butt,input_struct.HF.Accelerometer_Z_Axis);
+    filtered_struct.HF.Accelerometer_Z_Axis=filtfilt(B_butt,A_butt,input_struct.HF.Accelerometer_Z_Axis);
 end

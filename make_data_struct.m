@@ -130,6 +130,7 @@ for i=2:length(dP_pos)-5
 end
 data_structure.LF.Comp_Status=C_status;
 
+data_structure.LF.Comp_Vector=Compressor_Status(data_structure,low_freq);
 % ==== Return and save the data structure ============
 
 if (save_opt == 'y')

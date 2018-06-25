@@ -1,5 +1,6 @@
 test=make_data_struct
 %initial values
+%%
 tension=100; %---------Change this to the tension of the test-------------
 
 %%
@@ -45,7 +46,7 @@ tension_factor=0.0001; %how much heat that developes from the tension
 %run
 for i=2:length(drive_rpm)
     %difference between pulley and air
-    temp_diff=air_temp(i)-pulley_temp;
+    temp_diff=air_temp(i-1)-pulley_temperature(i-1);
 
     %tension contribution
     tension_contribution(i)=tension_factor*tension*drive_rpm(i);
@@ -57,10 +58,14 @@ for i=2:length(drive_rpm)
     speed_contribution(i)=speed_factor*drive_rpm(i);
 
     %total
-    pulley_temp=pulley_temp+fs*material_factor*(speed_contribution(i)+air_contribution(i)+tension_contribution(i));
+    pulley_temperature(i)=pulley_temperature(i-1)+fs*material_factor*(speed_contribution(i)+air_contribution(i)+tension_contribution(i));
 
     %output
-    pulley_temperature(i)=pulley_temp;
+    if(drive_rpm(i)*tension_factor~=0)
+        tension_est(i)=((((test.LF.Pulley_Surface_Temp(i)-test.LF.Pulley_Surface_Temp(i-1))/(fs*material_factor))-speed_contribution(i)-air_contribution(i)))/(drive_rpm(i)*tension_factor);
+    else
+        tension_est(i)=0;
+    end
 end
 
 %
@@ -79,8 +84,9 @@ plot(t,test.LF.VFD_Voltage_Output*3.9)
 legend('drive rpm','estimated from voltage')
 
 subplot(2,2,3)
-plot(t,test.LF.Cond_Air_In-test.LF.Pulley_Surface_Temp)
-legend('temperature pulley-air')
+%plot(t,test.LF.Cond_Air_In-test.LF.Pulley_Surface_Temp)
+plot(t,tension_est)
+legend('tension estimate')
 
 subplot(2,2,4)
 plot(t,test.LF.Pulley_Surface_Temp)

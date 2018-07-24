@@ -25,20 +25,20 @@ wc_butt = 500/(0.5*fs); %cut-off at 250hz
         movmean_comp=5;
     else
         hampel_comp=5;
-        movmean_comp=10;
+        movmean_comp=5;
     end
 
     % ==== Filter RPM signals ===================
     %moving average
     
-    filtered_struct.LF.Drive_RPM = movmean(hampel(input_struct.LF.Drive_RPM,hampel_comp),movmean_comp);
-    filtered_struct.LF.Comp_RPM = movmean(hampel(input_struct.LF.Comp_RPM,hampel_comp),movmean_comp);
+    filtered_struct.LF.Drive_RPM = hampel(input_struct.LF.Drive_RPM,hampel_comp);
+    filtered_struct.LF.Comp_RPM = hampel(input_struct.LF.Comp_RPM,hampel_comp);
     
     %set low rpm to 0
     isDriveRPM=(filtered_struct.LF.Drive_RPM>750); %fix this, 1.23 not good
     %isCompRPM=(filtered_struct.LF.Comp_RPM>600*1.23);
-    filtered_struct.LF.Drive_RPM=filtered_struct.LF.Drive_RPM.*isDriveRPM;
-    filtered_struct.LF.Comp_RPM=filtered_struct.LF.Comp_RPM.*isDriveRPM;
+    filtered_struct.LF.Drive_RPM=movmean(filtered_struct.LF.Drive_RPM,movmean_comp).*isDriveRPM;
+    filtered_struct.LF.Comp_RPM=movmean(filtered_struct.LF.Comp_RPM,movmean_comp).*isDriveRPM;
     
     % ==== Filter Pressure signals ==============
     %moving average
@@ -49,9 +49,9 @@ wc_butt = 500/(0.5*fs); %cut-off at 250hz
     
     %belt system
     %removes outlier and then moving average
-    filtered_struct.LF.Compressor_Belt_Temp=movmean(hampel(input_struct.LF.Compressor_Belt_Temp,5),2);
-    filtered_struct.LF.Pulley_Surface_Temp=movmean(hampel(input_struct.LF.Pulley_Surface_Temp,5),2);
-    filtered_struct.LF.Drive_Belt_Surface_Temp=movmean(hampel(input_struct.LF.Drive_Belt_Surface_Temp,5),2);
+    filtered_struct.LF.Compressor_Belt_Temp=input_struct.LF.Compressor_Belt_Temp;
+    filtered_struct.LF.Pulley_Surface_Temp=input_struct.LF.Pulley_Surface_Temp;
+    filtered_struct.LF.Drive_Belt_Surface_Temp=input_struct.LF.Drive_Belt_Surface_Temp;
     
     %Air temps
     %removes outlier and then moving average

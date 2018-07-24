@@ -1,7 +1,7 @@
 test=make_data_struct
 %initial values
 %%
-tension=100; %---------Change this to the tension of the test-------------
+tension=300; %---------Change this to the tension of the test-------------
 
 %%
 %clear
@@ -36,7 +36,7 @@ pulley_temperature=pulley_temp;
 
 
 %design parameters
-material_factor=0.0010; %how fast the temperatures are changing in the pulley
+material_factor=0.00020; %how fast the temperatures are changing in the pulley
 speed_factor=0.30; %how much heat that developes from the speed
 air_factor=0.01; %how mush heat that is added or removed from the air
 air=300; % heat that is added or removed from air without pulley moving
@@ -86,6 +86,7 @@ legend('drive rpm','estimated from voltage')
 subplot(2,2,3)
 %plot(t,test.LF.Cond_Air_In-test.LF.Pulley_Surface_Temp)
 plot(t,tension_est)
+ylim([0 1000])
 legend('tension estimate')
 
 subplot(2,2,4)

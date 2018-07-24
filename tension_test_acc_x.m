@@ -17,10 +17,10 @@ end
 f={'t1','t2','t3','t4','t5','t6','t7','t8','t9','t10','t11'};
 style={'.-','.-','.-','.-','.-','*-','*-','*-','*-','*-','*-'};
 fs=2500;
-scale=100;
+scale=1;
 fftdata=[];
 
-topFreq=600;
+topFreq=250;
 lowFreq=1;
 
 %topFreq=19.8; %nothing
@@ -59,9 +59,9 @@ T.High=340:400;
 T.Low=160:220;
 T.No=120:220; %worked for 10 seconds
 
-time=T.Low;
-data_current=dataLow;
-for i=9:11
+time=T.No;
+data_current=dataNo;
+for i=6
     %z and y best
     data_current(i).LF.Comp_RPM(time)
     av_speed(i)=mean(data_current(i).LF.Comp_RPM(time));
@@ -79,8 +79,10 @@ for i=9:11
     fdata=fftdata(i,lowFreq*scale+1:topFreq*scale)/(scale*length(time(1)*fs:time(end)*fs));
     %hold off
     
-    plot(x,fdata,style{i});
+    stem(x,fdata,style{i});
      hold on
+     grid on
+     title('Frequency components in Accelerometer Z-Axis')
      rmsVal(i)=rms(fdata);
     % plot(peak(1,:),peak(2,:),'o')
     for n=1:n_peaks
@@ -106,6 +108,8 @@ for i=9:11
      end
 end 
 legend(f);
+xlabel('Frequency [Hz]')
+ylabel('Magnitude')
 %
 %clf
 %plot(1:11,p,'.-')
